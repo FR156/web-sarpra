@@ -8,6 +8,9 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
+    if (auth()->user()->role === 'admin' || auth()->user()->role === 'staff') {
+        return redirect('/admin');
+    }
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 

@@ -17,8 +17,8 @@ class UserForm
     {
         return $schema
             ->components([
-                Section::make('Informasi Akun')
-                    ->description('Kelola kredensial petugas dan peminjam.')
+                Section::make('Account Information')
+                    ->description('Manage staff and borrower credentials.')
                     ->schema([
                         TextInput::make('name')
                             ->required()
@@ -32,32 +32,31 @@ class UserForm
                         Select::make('role')
                             ->options([
                                 'admin' => 'Admin',
-                                'staff' => 'Petugas (Staff)',
-                                'borrower' => 'Peminjam (Borrower)',
+                                'staff' => 'Staff',
+                                'borrower' => 'Borrower',
                             ])
                             ->required()
                             ->native(false)
-                            ->disabled(fn ($record) => $record && $record->id === auth()->id())
-                            ->helperText(fn ($record) => $record && $record->id === auth()->id() 
-                                ? 'Anda tidak dapat mengubah role akun Anda sendiri demi keamanan.' 
+                            ->disabled(fn ($record) => $record && $record->id === auth()->id() || $record && $record->id === 1)
+                            ->helperText(fn ($record) => $record && $record->id === auth()->id() || $record && $record->id === 1
+                                ? 'You can not change your own and super admin role.' 
                                 : ''),
                                 
                         Toggle::make('is_active')
                             ->label('Akun Aktif')
                             ->default(true)
-                            ->disabled(fn ($record) => $record && $record->id === auth()->id())
-                            ->helperText(fn ($record) => $record && $record->id === auth()->id() 
-                                ? 'Anda tidak dapat mengubah status akun Anda sendiri demi keamanan.' 
+                            ->disabled(fn ($record) => $record && $record->id === auth()->id() || $record && $record->id === 1)
+                            ->helperText(fn ($record) => $record && $record->id === auth()->id() || $record && $record->id === 1
+                                ? 'You can not change your own and super admin status.' 
                                 : ''),
 
                         TextInput::make('password')
                             ->password()
                             ->default('sarpra1234')
-                            ->helperText('Password default adalah: sarpra1234. Harap segera diganti.')
+                            ->helperText('Default password is sarpra1234. Please change after login.')
                             ->dehydrateStateUsing(fn ($state) => Hash::make($state))
-                            ->required(fn ($record) => $record === null) // Wajib hanya saat create
-                            ->visible(fn ($record) => $record === null) // Hanya muncul saat create
-                            ->confirmed(),
+                            ->required(fn ($record) => $record === null)
+                            ->visible(fn ($record) => $record === null),
                     ])->columns(2),
             ]);
     }
