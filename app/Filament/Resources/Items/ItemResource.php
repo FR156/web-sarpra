@@ -23,6 +23,8 @@ class ItemResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
+    protected static string|\UnitEnum|null $navigationGroup = 'Manajemen Barang';
+
     public static function form(Schema $schema): Schema
     {
         return ItemForm::configure($schema);
@@ -47,5 +49,16 @@ class ItemResource extends Resource
             'create' => CreateItem::route('/create'),
             'edit' => EditItem::route('/{record}/edit'),
         ];
+    }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        // Hanya muncul di sidebar jika usernya Admin
+        return auth()->user()?->isAdmin() ?? false;
+    }
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()?->isAdmin() ?? false;
     }
 }

@@ -50,7 +50,6 @@ class UserResource extends Resource
 
     public static function shouldRegisterNavigation(): bool
     {
-        // Hanya muncul di sidebar jika usernya Admin
         return auth()->user()?->isAdmin() ?? false;
     }
 

@@ -31,7 +31,7 @@ class AdminPanelProvider extends PanelProvider
             ->userMenuItems([
                 'profile' => MenuItem::make()
                     ->label('Edit Profile')
-                    ->url('/profile') // Route default Breeze
+                    ->url('/profile') 
                     ->icon('heroicon-o-user-circle'),
             ])
             // ->login()
