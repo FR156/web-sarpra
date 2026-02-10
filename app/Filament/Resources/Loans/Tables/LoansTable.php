@@ -56,7 +56,7 @@ class LoansTable
                             'approver_id' => auth()->id(),
                         ]);
                         $record->itemUnits()->update(['status' => 'available']);
-                        ActivityLogged::dispatch('rejected', "Peminjaman ditolak #{$record->id}", $record);
+                        ActivityLogged::dispatch('rejected', "Peminjaman ditolak (id:{$record->id})", $record);
                     }),
 
                 // 2. Tombol Mark as Returned
@@ -72,7 +72,7 @@ class LoansTable
                             'returned_at' => now(),
                         ]);
                         $record->itemUnits()->update(['status' => 'available']);
-                        ActivityLogged::dispatch('returned', "Barang peminjaman telah dikembalikan #{$record->id}", $record);
+                        ActivityLogged::dispatch('returned', "Barang peminjaman telah dikembalikan (id:{$record->id})", $record);
                     }),
             ])
             ->defaultSort('start_date', 'desc')

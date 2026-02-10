@@ -48,9 +48,16 @@ class ActivityLogResource extends Resource
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'created' => 'success',
+                        'request' => 'warning',
                         'approved' => 'info',
                         'rejected', 'cancelled' => 'danger',
                         'returned' => 'gray',
+                        'added' => 'success',
+                        'updated' => 'warning',
+                        'deleted' => 'danger',
+                        'login' => 'success',
+                        'logout' => 'warning',
+                        'login_failed' => 'danger',
                         default => 'indigo',
                     }),
 
@@ -67,9 +74,17 @@ class ActivityLogResource extends Resource
                 SelectFilter::make('action')
                     ->options([
                         'created' => 'Created',
+                        'request' => 'Requested',
                         'approved' => 'Approved',
                         'rejected' => 'Rejected',
                         'returned' => 'Returned',
+                        'cancelled' => 'Cancelled',
+                        'added' => 'Added',
+                        'updated' => 'Updated',
+                        'deleted' => 'Deleted',
+                        'login' => 'Login',
+                        'logout' => 'Logout',
+                        'login_failed' => 'Login Failed',
                     ]),
             ])
             ->defaultSort('created_at', 'desc');
@@ -87,5 +102,15 @@ class ActivityLogResource extends Resource
         return [
             'index' => ListActivityLogs::route('/'),
         ];
+    }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return auth()->user()?->isAdmin() ?? false;
+    }
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()?->isAdmin() ?? false;
     }
 }
