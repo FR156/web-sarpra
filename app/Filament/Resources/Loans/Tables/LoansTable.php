@@ -17,6 +17,7 @@ class LoansTable
     {
         return $table
             ->columns([
+                TextColumn::make('id')->label('ID')->sortable(),
                 TextColumn::make('user.name')->label('Peminjam')->searchable(),
                 TextColumn::make('status')->badge()->sortable()
                     ->color(fn (string $state): string => match ($state) {
@@ -28,6 +29,8 @@ class LoansTable
                         'cancelled' => 'gray',
                     }),
                 TextColumn::make('start_date')->dateTime()->sortable(),
+                TextColumn::make('due_date')->dateTime()->sortable(),
+                TextColumn::make('returned_at')->dateTime()->sortable(),
             ])
             ->recordActions([
                 Action::make('approve')
@@ -41,7 +44,7 @@ class LoansTable
                             'approver_id' => auth()->id(),
                         ]);
                         $record->itemUnits()->update(['status' => 'on_loan']);
-                        ActivityLogged::dispatch('approved', "Peminjaman diterima #{$record->id}", $record);
+                        ActivityLogged::dispatch('approved', "Peminjaman diterima (id peminjaman:{$record->id})", $record);
                     }),
                 
                 Action::make('reject')
@@ -56,7 +59,7 @@ class LoansTable
                             'approver_id' => auth()->id(),
                         ]);
                         $record->itemUnits()->update(['status' => 'available']);
-                        ActivityLogged::dispatch('rejected', "Peminjaman ditolak (id:{$record->id})", $record);
+                        ActivityLogged::dispatch('rejected', "Peminjaman ditolak (id peminjaman:{$record->id})", $record);
                     }),
 
                 // 2. Tombol Mark as Returned
@@ -72,7 +75,7 @@ class LoansTable
                             'returned_at' => now(),
                         ]);
                         $record->itemUnits()->update(['status' => 'available']);
-                        ActivityLogged::dispatch('returned', "Barang peminjaman telah dikembalikan (id:{$record->id})", $record);
+                        ActivityLogged::dispatch('returned', "Barang peminjaman telah dikembalikan (id peminjaman:{$record->id})", $record);
                     }),
             ])
             ->defaultSort('start_date', 'desc')

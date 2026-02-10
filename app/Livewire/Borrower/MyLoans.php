@@ -38,7 +38,7 @@ class MyLoans extends Component
             $loan->update(['status' => 'cancelled']);
             
             $record = $loan;
-            ActivityLogged::dispatch('cancelled', "Peminjaman dibatalkan #{$record->id}", $record);
+            ActivityLogged::dispatch('cancelled', "Peminjaman dibatalkan (id peminjaman:{$record->id})", $record);
 
             session()->flash('message', 'Peminjaman berhasil dibatalkan.');
         } else {

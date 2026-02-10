@@ -17,6 +17,7 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Infolists\Components\TextEntry;
 
 class ActivityLogResource extends Resource
 {
@@ -64,7 +65,7 @@ class ActivityLogResource extends Resource
                 TextColumn::make('description')
                     ->label('Detail Aktivitas')
                     ->searchable()
-                    ->wrap(),
+                    ->visibleFrom('md'),
 
                 TextColumn::make('ip_address')
                     ->label('IP Address')
@@ -87,7 +88,19 @@ class ActivityLogResource extends Resource
                         'login_failed' => 'Login Failed',
                     ]),
             ])
-            ->defaultSort('created_at', 'desc');
+            ->defaultSort('created_at', 'desc')
+            ->recordActions([
+                \Filament\Actions\ViewAction::make()
+                    ->label('Detail')
+                    ->modalHeading('Detail Aktivitas')
+                    ->modalWidth('lg')
+                    ->schema([
+                        TextEntry::make('description')
+                            ->label('Deskripsi Lengkap')
+                            ->prose() // Font lebih enak dibaca untuk teks panjang
+                            ->columnSpanFull(),
+                    ]),
+            ]);
     }
 
     public static function getRelations(): array
@@ -112,5 +125,23 @@ class ActivityLogResource extends Resource
     public static function canViewAny(): bool
     {
         return auth()->user()?->isAdmin() ?? false;
+    }
+
+    // Menghilangkan tombol "New"
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
+    // Memastikan tidak bisa diedit meskipun lewat URL manual
+    public static function canEdit($record): bool
+    {
+        return false;
+    }
+
+    // Memastikan log tidak bisa dihapus
+    public static function canDelete($record): bool
+    {
+        return false;
     }
 }
