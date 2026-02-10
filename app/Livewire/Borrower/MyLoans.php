@@ -6,6 +6,7 @@ use App\Models\Loan;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Layout;
+use App\Events\ActivityLogged;
 
 #[Layout('layouts.app')]
 class MyLoans extends Component
@@ -35,6 +36,9 @@ class MyLoans extends Component
         if ($loan) {
             $loan->itemUnits()->update(['status' => 'available']);
             $loan->update(['status' => 'cancelled']);
+            
+            $record = $loan;
+            ActivityLogged::dispatch('cancelled', "Peminjaman dibatalkan borrower #{$record->id}", $record);
 
             session()->flash('message', 'Peminjaman berhasil dibatalkan.');
         } else {

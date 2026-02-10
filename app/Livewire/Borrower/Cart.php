@@ -7,6 +7,7 @@ use App\Models\Item;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\DB;
+use App\Events\ActivityLogged;
 
 #[Layout('layouts.app')]
 class Cart extends Component
@@ -58,6 +59,9 @@ class Cart extends Component
                     $unit->update(['status' => 'on_loan']);
                 }
             }
+            
+            $record = $loan;
+            ActivityLogged::dispatch('request', "Borrower membuat permintaan peminjaman #{$record->id}", $record);
         });
 
         session()->forget('cart');

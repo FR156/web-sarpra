@@ -8,7 +8,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Item extends Model
 {
-    protected $fillable = ['name', 'category_id', 'description'];
+    protected $fillable = [
+        'name', 
+        'category_id', 
+        'description'
+    ];
 
     public function category(): BelongsTo
     {

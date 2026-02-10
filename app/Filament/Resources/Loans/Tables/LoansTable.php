@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Loans\Tables;
 
+use App\Events\ActivityLogged;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Actions\Action;
@@ -22,6 +23,7 @@ class LoansTable
                         'on_going' => 'warning',
                         'returned' => 'success',
                         'rejected' => 'danger',
+                        'cancelled' => 'gray',
                     }),
                 TextColumn::make('start_date')->dateTime(),
             ])
@@ -37,6 +39,7 @@ class LoansTable
                             'approver_id' => auth()->id(),
                         ]);
                         $record->itemUnits()->update(['status' => 'on_loan']);
+                        ActivityLogged::dispatch('approved', "Peminjaman diterima oleh staff #{$record->id}", $record);
                     }),
                 
                 Action::make('reject')
@@ -51,6 +54,7 @@ class LoansTable
                             'approver_id' => auth()->id(),
                         ]);
                         $record->itemUnits()->update(['status' => 'available']);
+                        ActivityLogged::dispatch('rejected', "Peminjaman ditolak oleh staff #{$record->id}", $record);
                     }),
 
                 // 2. Tombol Mark as Returned
@@ -65,9 +69,8 @@ class LoansTable
                             'status' => 'returned',
                             'returned_at' => now(),
                         ]);
-                        
-                        // Kembalikan semua unit yang terkait jadi available lagi
                         $record->itemUnits()->update(['status' => 'available']);
+                        ActivityLogged::dispatch('returned', "Peminjaman barang dikembalikan oleh borrower #{$record->id}", $record);
                     }),
             ]);
     }
