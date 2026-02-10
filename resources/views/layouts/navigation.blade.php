@@ -15,6 +15,18 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
+                    <x-nav-link :href="route('catalog')" :active="request()->routeIs('catalog')">
+                        {{ __('Katalog Barang') }}
+                    </x-nav-link>
+
+                    <x-nav-link :href="url('/my-loans')" :active="request()->is('my-loans')">
+                        {{ __('Pinjaman Saya') }}
+                    </x-nav-link>
+
+                    <x-nav-link :href="route('cart')" :active="request()->routeIs('cart')">
+                        {{ __('Keranjang') }} ({{ count(session('cart', [])) }})
+                    </x-nav-link>
                 </div>
             </div>
 

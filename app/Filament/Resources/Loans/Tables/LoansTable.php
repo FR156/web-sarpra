@@ -38,6 +38,37 @@ class LoansTable
                         ]);
                         $record->itemUnits()->update(['status' => 'on_loan']);
                     }),
+                
+                Action::make('reject')
+                    ->label('Tolak')
+                    ->icon('heroicon-o-x-circle')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->visible(fn ($record) => $record->status === 'pending')
+                    ->action(function ($record) {
+                        $record->update([
+                            'status' => 'rejected',
+                            'approver_id' => auth()->id(),
+                        ]);
+                        // Tidak perlu update item unit karena status masih available
+                    }),
+
+                // 2. Tombol Mark as Returned
+                Action::make('mark_returned')
+                    ->label('Kembalikan Barang')
+                    ->icon('heroicon-o-arrow-path-rounded-square')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->visible(fn ($record) => $record->status === 'approved' || $record->status === 'on_going')
+                    ->action(function ($record) {
+                        $record->update([
+                            'status' => 'returned',
+                            'returned_at' => now(),
+                        ]);
+                        
+                        // Kembalikan semua unit yang terkait jadi available lagi
+                        $record->itemUnits()->update(['status' => 'available']);
+                    }),
             ]);
     }
 }

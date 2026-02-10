@@ -11,6 +11,9 @@ export default {
 
     theme: {
         extend: {
+            colors: {
+                'bg-card': '#1F2937',
+            },
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },

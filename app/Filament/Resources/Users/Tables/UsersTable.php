@@ -61,6 +61,7 @@ class UsersTable
                 EditAction::make(),
                 DeleteAction::make()
                     ->requiresConfirmation()
+                    ->label('Deactivate')
                     ->modalHeading('Deactivate User')
                     ->modalDescription('Are you sure you want to deactivate this user? The data will not be deleted in the database.')
                     ->modalSubmitActionLabel('Yes, deactivate user')
