@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Models\ActivityLog;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Auth\Events\Login;
 
 class LogActivity
 {
@@ -23,13 +24,17 @@ class LogActivity
      */
     public function handle(ActivityLogged $event): void
     {
+        $user = auth()->user();
+        $roleName = ucfirst($user->role ?? 'User'); 
+        $detailedDescription = "[{$roleName}] {$user->name}: {$event->description}";
+        
         ActivityLog::create([
-            'user_id' => auth()->id(),
+            'user_id' => $user->id,
             'action' => $event->action,
             'model_type' => $event->model ? get_class($event->model) : null,
             'model_id' => $event->model ? $event->model->id : null,
-            'description' => $event->description,
-            'ip_address' => Request::ip(),
+            'description' => $detailedDescription,
+            'ip_address' => request()->ip(),
         ]);
     }
 }

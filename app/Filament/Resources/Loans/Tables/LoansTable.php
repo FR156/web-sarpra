@@ -8,6 +8,8 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Actions\Action;
 use App\Models\Loan;
 use App\Models\User;
+use Filament\Forms\Components\Select;
+use Filament\Tables\Filters\SelectFilter;
 
 class LoansTable
 {
@@ -15,8 +17,8 @@ class LoansTable
     {
         return $table
             ->columns([
-                TextColumn::make('user.name')->label('Peminjam')->sortable(),
-                TextColumn::make('status')->badge()
+                TextColumn::make('user.name')->label('Peminjam')->searchable(),
+                TextColumn::make('status')->badge()->sortable()
                     ->color(fn (string $state): string => match ($state) {
                         'pending' => 'gray',
                         'approved' => 'info',
@@ -25,7 +27,7 @@ class LoansTable
                         'rejected' => 'danger',
                         'cancelled' => 'gray',
                     }),
-                TextColumn::make('start_date')->dateTime(),
+                TextColumn::make('start_date')->dateTime()->sortable(),
             ])
             ->recordActions([
                 Action::make('approve')
@@ -39,7 +41,7 @@ class LoansTable
                             'approver_id' => auth()->id(),
                         ]);
                         $record->itemUnits()->update(['status' => 'on_loan']);
-                        ActivityLogged::dispatch('approved', "Peminjaman diterima oleh staff #{$record->id}", $record);
+                        ActivityLogged::dispatch('approved', "Peminjaman diterima #{$record->id}", $record);
                     }),
                 
                 Action::make('reject')
@@ -54,7 +56,7 @@ class LoansTable
                             'approver_id' => auth()->id(),
                         ]);
                         $record->itemUnits()->update(['status' => 'available']);
-                        ActivityLogged::dispatch('rejected', "Peminjaman ditolak oleh staff #{$record->id}", $record);
+                        ActivityLogged::dispatch('rejected', "Peminjaman ditolak #{$record->id}", $record);
                     }),
 
                 // 2. Tombol Mark as Returned
@@ -70,8 +72,21 @@ class LoansTable
                             'returned_at' => now(),
                         ]);
                         $record->itemUnits()->update(['status' => 'available']);
-                        ActivityLogged::dispatch('returned', "Peminjaman barang dikembalikan oleh borrower #{$record->id}", $record);
+                        ActivityLogged::dispatch('returned', "Barang peminjaman telah dikembalikan #{$record->id}", $record);
                     }),
+            ])
+            ->defaultSort('start_date', 'desc')
+            ->filters([
+                SelectFilter::make('status')
+                    ->options([
+                        'pending' => 'Pending',
+                        'approved' => 'Approved',
+                        'on_going' => 'On Going',
+                        'returned' => 'Returned',
+                        'rejected' => 'Rejected',
+                        'cancelled' => 'Cancelled',
+                    ])
+                    ->label('Status'),
             ]);
     }
 }

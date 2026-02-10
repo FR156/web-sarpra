@@ -61,7 +61,7 @@ class Cart extends Component
             }
             
             $record = $loan;
-            ActivityLogged::dispatch('request', "Borrower membuat permintaan peminjaman #{$record->id}", $record);
+            ActivityLogged::dispatch('request', "Membuat permintaan peminjaman #{$record->id}", $record);
         });
 
         session()->forget('cart');
