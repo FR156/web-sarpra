@@ -76,8 +76,14 @@ class Catalog extends Component
     // Tambahkan di dalam class Catalog
     public function addToCart($itemId)
     {
-        $qty = $this->quantity[$itemId] ?? 1;
-        $item = \App\Models\Item::find($itemId);
+        $qty = (int) ($this->quantity[$itemId] ?? 1);
+
+        if ($qty < 1) {
+            session()->flash('error', 'Jumlah minimal adalah 1 unit.');
+            return;
+        }
+
+        $item = Item::find($itemId);
         
         // Cek apakah stok unit yang 'available' cukup
         $availableCount = $item->itemUnits()->where('status', 'available')->count();
@@ -103,6 +109,7 @@ class Catalog extends Component
             'id' => $item->id,
             'name' => $item->name,
             'category' => $item->category->name ?? 'Umum',
+            'qty' => $qty,
         ];
 
         // Simpan kembali ke session

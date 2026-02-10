@@ -50,7 +50,7 @@ class LoansTable
                             'status' => 'rejected',
                             'approver_id' => auth()->id(),
                         ]);
-                        // Tidak perlu update item unit karena status masih available
+                        $record->itemUnits()->update(['status' => 'available']);
                     }),
 
                 // 2. Tombol Mark as Returned

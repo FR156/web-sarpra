@@ -45,9 +45,20 @@
                                                 default => 'bg-gray-100 text-gray-800',
                                             };
                                         @endphp
-                                        <span class="px-3 py-1 rounded-full text-xs font-medium {{ $statusColor }}">
-                                            {{ ucfirst(str_replace('_', ' ', $loan->status)) }}
-                                        </span>
+                                        <div class="flex flex-col items-center gap-2">
+                                            <span class="px-3 py-1 rounded-full text-xs font-medium {{ $statusColor }}">
+                                                {{ ucfirst($loan->status) }}
+                                            </span>
+
+                                            @if($loan->status === 'pending')
+                                                <button 
+                                                    wire:click="cancelLoan({{ $loan->id }})"
+                                                    wire:confirm="Yakin ingin membatalkan pesanan ini?"
+                                                    class="text-xs text-red-600 hover:underline font-semibold">
+                                                    Batalkan Request
+                                                </button>
+                                            @endif
+                                        </div>
                                     </td>
                                 </tr>
                             @empty

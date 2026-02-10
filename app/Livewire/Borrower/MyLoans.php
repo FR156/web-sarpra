@@ -24,4 +24,21 @@ class MyLoans extends Component
             'loans' => $loans
         ]);
     }
+
+    public function cancelLoan($loanId)
+    {
+        $loan = \App\Models\Loan::where('id', $loanId)
+            ->where('user_id', auth()->id())
+            ->where('status', 'pending')
+            ->first();
+
+        if ($loan) {
+            $loan->itemUnits()->update(['status' => 'available']);
+            $loan->update(['status' => 'cancelled']);
+
+            session()->flash('message', 'Peminjaman berhasil dibatalkan.');
+        } else {
+            session()->flash('error', 'Peminjaman tidak bisa dibatalkan karena sudah diproses.');
+        }
+    }
 }
