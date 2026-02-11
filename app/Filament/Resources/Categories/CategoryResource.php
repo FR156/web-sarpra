@@ -14,14 +14,15 @@ use Filament\Actions\DeleteBulkAction;
 use App\Filament\Resources\Categories\Schemas\CategoryForm;
 use App\Filament\Resources\Categories\Tables\CategoryTable;
 use Illuminate\Contracts\Support\Htmlable;
+use BackedEnum;
+use UnitEnum;
 
 class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
 
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-tag';
-    
-    protected static string|\UnitEnum|null $navigationGroup = 'Manajemen Barang';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-tag';
+    protected static string|UnitEnum|null $navigationGroup = 'Manajemen Barang';
 
     public static function form(Schema $schema): Schema
     {

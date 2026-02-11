@@ -27,12 +27,17 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->favicon('pubic/favicon.ico')
             // ->profile()
             ->userMenuItems([
                 'profile' => MenuItem::make()
                     ->label('Edit Profile')
                     ->url('/profile') 
                     ->icon('heroicon-o-user-circle'),
+            ])
+            ->navigationGroups([
+                'Manajemen Barang',
+                'Manajemen User',
             ])
             // ->login()
             ->authGuard('web')

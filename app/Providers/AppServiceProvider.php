@@ -9,6 +9,12 @@ use Illuminate\Auth\Events\Failed;
 use App\Events\ActivityLogged;
 use App\Listeners\LogActivity;
 use App\Listeners\LogAuthActivity;
+use App\Observers\ItemObserver;
+use App\Observers\ItemUnitObserver;
+use App\Observers\CategoryObserver;
+use App\Models\Item;
+use App\Models\ItemUnit;
+use App\Models\Category;
 use Illuminate\Support\Facades\Event;
 
 
@@ -36,8 +42,12 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(ActivityLogged::class, LogActivity::class);
 
         // Observer
-        \App\Models\Item::observe(\App\Observers\ItemObserver::class);
-        \App\Models\ItemUnit::observe(\App\Observers\ItemUnitObserver::class);
-        \App\Models\Category::observe(\App\Observers\CategoryObserver::class);
+        static $observerRegistered = false;
+        if (!$observerRegistered) {
+            Item::observe(ItemObserver::class);
+            ItemUnit::observe(ItemUnitObserver::class);
+            Category::observe(CategoryObserver::class);
+            $observerRegistered = true;
+        }
     }
 }

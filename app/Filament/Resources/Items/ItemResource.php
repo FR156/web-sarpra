@@ -9,6 +9,7 @@ use App\Filament\Resources\Items\Schemas\ItemForm;
 use App\Filament\Resources\Items\Tables\ItemsTable;
 use App\Models\Item;
 use BackedEnum;
+use UnitEnum;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -21,9 +22,8 @@ class ItemResource extends Resource
 {
     protected static ?string $model = Item::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
-
-    protected static string|\UnitEnum|null $navigationGroup = 'Manajemen Barang';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-archive-box';
+    protected static string|UnitEnum|null $navigationGroup = 'Manajemen Barang';
 
     public static function form(Schema $schema): Schema
     {
