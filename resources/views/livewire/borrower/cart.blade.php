@@ -41,8 +41,16 @@
                 </table>
 
                 <div class="max-w-xs">
-                    <label class="block text-sm font-medium text-gray-700">Rencana Tanggal Kembali</label>
-                    <input type="date" wire:model="dueDate" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 mb-4">
+                    <div class="grid lg:flex gap-4">
+                        <div class="grid">
+                            <label class="block text-sm font-medium text-gray-700">Rencana Tanggal Pinjam</label>
+                            <input type="date" wire:model="startDate" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 mb-4">
+                        </div>
+                        <div class="grid">
+                            <label class="block text-sm font-medium text-gray-700">Rencana Tanggal Kembali</label>
+                            <input type="date" wire:model="dueDate" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 mb-4">
+                        </div>
+                    </div>
                     
                     <button wire:click="submitRequest" class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-bold">
                         Ajukan Peminjaman

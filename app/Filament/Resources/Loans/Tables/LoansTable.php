@@ -17,8 +17,14 @@ class LoansTable
     {
         return $table
             ->columns([
-                TextColumn::make('id')->label('ID')->sortable(),
+                TextColumn::make('id')->label('ID')->sortable()->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('user.name')->label('Peminjam')->searchable(),
+                TextColumn::make('itemUnits.unit_code')
+                    ->label('Daftar Barang')
+                    ->listWithLineBreaks()
+                    ->bulleted()
+                    ->limitList(2) 
+                    ->expandableLimitedList(),
                 TextColumn::make('status')->badge()->sortable()
                     ->color(fn (string $state): string => match ($state) {
                         'pending' => 'gray',
@@ -30,7 +36,7 @@ class LoansTable
                     }),
                 TextColumn::make('start_date')->dateTime()->sortable(),
                 TextColumn::make('due_date')->dateTime()->sortable(),
-                TextColumn::make('returned_at')->dateTime()->sortable(),
+                TextColumn::make('returned_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
             ])
             ->recordActions([
                 Action::make('approve')

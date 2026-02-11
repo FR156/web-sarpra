@@ -13,6 +13,7 @@ use App\Events\ActivityLogged;
 class Cart extends Component
 {
     public $cart = [];
+    public $startDate;
     public $dueDate;
 
     public function mount()
@@ -30,6 +31,7 @@ class Cart extends Component
     public function submitRequest()
     {
         $this->validate([
+            'startDate' => 'required',
             'dueDate' => 'required|after:today',
         ]);
 
@@ -39,7 +41,7 @@ class Cart extends Component
             // Buat satu record Loan (satu grup peminjaman)
             $loan = Loan::create([
                 'user_id' => auth()->id(),
-                'start_date' => now(),
+                'start_date' => $this->startDate,
                 'due_date' => $this->dueDate,
                 'status' => 'pending',
             ]);
