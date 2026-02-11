@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Loan extends Model
 {
@@ -21,6 +22,31 @@ class Loan extends Model
         'due_date' => 'datetime',
         'returned_at' => 'datetime',
     ];
+
+    public function getComputedStatusAttribute()
+    {
+        $today = Carbon::today();
+
+        if ($this->status === 'pending' || $this->status === 'rejected' || $this->status === 'cancelled') {
+            return $this->status;
+        }
+
+        if ($this->returned_at) {
+            return 'returned';
+        }
+
+        if ($this->status === 'approved' && $today->lt($this->start_date)) {
+            return 'approved';
+        }
+
+        if ($this->status === 'approved' && $today->between($this->start_date, $this->due_date)) {
+            return 'on_going';
+        }
+
+        if ($today->gt($this->due_date)) {
+            return 'overdue';
+        }
+    }
     
     public function item()
     {

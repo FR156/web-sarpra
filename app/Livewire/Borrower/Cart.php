@@ -32,7 +32,7 @@ class Cart extends Component
     {
         $this->validate([
             'startDate' => 'required',
-            'dueDate' => 'required|after:today',
+            'dueDate' => 'required',
         ]);
 
         if (empty($this->cart)) return;
@@ -52,7 +52,7 @@ class Cart extends Component
                 // Ambil satu unit yang tersedia
                 $units = $item->itemUnits()
                     ->where('status', 'available')
-                    ->limit($cartItem['qty'] ?? 1)
+                    ->limit($cartItem['qty'])
                     ->get();
                     
                 foreach ($units as $unit) {

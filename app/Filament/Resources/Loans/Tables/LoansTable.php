@@ -10,6 +10,7 @@ use App\Models\Loan;
 use App\Models\User;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Forms\Components\TextInput;
 
 class LoansTable
 {
@@ -25,11 +26,12 @@ class LoansTable
                     ->bulleted()
                     ->limitList(2) 
                     ->expandableLimitedList(),
-                TextColumn::make('status')->badge()->sortable()
+                TextColumn::make('computed_status')->label('status')->badge()->sortable()
                     ->color(fn (string $state): string => match ($state) {
                         'pending' => 'gray',
                         'approved' => 'info',
                         'on_going' => 'warning',
+                        'overdue' => 'danger',
                         'returned' => 'success',
                         'rejected' => 'danger',
                         'cancelled' => 'gray',
@@ -68,12 +70,23 @@ class LoansTable
                         ActivityLogged::dispatch('rejected', "Peminjaman ditolak (id peminjaman:{$record->id})", $record);
                     }),
 
-                // 2. Tombol Mark as Returned
                 Action::make('mark_returned')
                     ->label('Kembalikan Barang')
                     ->icon('heroicon-o-arrow-path-rounded-square')
                     ->color('success')
-                    ->requiresConfirmation()
+                    ->schema([
+                        TextInput::make('fine_amount')
+                            ->label('Denda (Rp)')
+                            ->numeric()
+                            ->default(0),
+                        Select::make('fine_reason')
+                            ->label('Alasan Denda')
+                            ->options([
+                                'damaged' => 'Rusak / Kurang',
+                                'late' => 'Terlambat',
+                                'other' => 'Lainnya',
+                            ])
+                    ])
                     ->visible(fn ($record) => $record->status === 'approved' || $record->status === 'on_going')
                     ->action(function ($record) {
                         $record->update([
@@ -83,6 +96,24 @@ class LoansTable
                         $record->itemUnits()->update(['status' => 'available']);
                         ActivityLogged::dispatch('returned', "Barang peminjaman telah dikembalikan (id peminjaman:{$record->id})", $record);
                     }),
+                Action::make('fine_status')
+                    ->label('Status Denda')
+                    ->color('warning')
+                    ->visible(fn ($record) => $record->status === 'returned')
+                    ->schema([
+                        Select::make('fine_status')
+                            ->label('Status Denda')
+                            ->options([
+                                'paid' => 'Lunas',
+                                'unpaid' => 'Belum Lunas',
+                            ])
+                    ])
+                    ->action(function ($record) {
+                        $record->update([
+                            'fine_status' => $record->fine_status,
+                        ]);
+                        ActivityLogged::dispatch('fine_status', "Status denda peminjaman telah diubah (id peminjaman:{$record->id})", $record);
+                    })
             ])
             ->defaultSort('start_date', 'desc')
             ->filters([
