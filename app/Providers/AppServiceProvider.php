@@ -38,16 +38,9 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(Logout::class, LogAuthActivity::class);
         Event::listen(Failed::class, LogAuthActivity::class);
 
-        // Activity
-        Event::listen(ActivityLogged::class, LogActivity::class);
-
         // Observer
-        static $observerRegistered = false;
-        if (!$observerRegistered) {
-            Item::observe(ItemObserver::class);
-            ItemUnit::observe(ItemUnitObserver::class);
-            Category::observe(CategoryObserver::class);
-            $observerRegistered = true;
-        }
+        Item::observe(ItemObserver::class);
+        ItemUnit::observe(ItemUnitObserver::class);
+        Category::observe(CategoryObserver::class);
     }
 }
