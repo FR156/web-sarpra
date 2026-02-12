@@ -23,29 +23,17 @@ class Loan extends Model
         'returned_at' => 'datetime',
     ];
 
-    public function getComputedStatusAttribute()
+    public function getDisplayStatusAttribute()
     {
-        $today = Carbon::today();
-
-        if ($this->status === 'pending' || $this->status === 'rejected' || $this->status === 'cancelled') {
-            return $this->status;
-        }
-
-        if ($this->returned_at) {
-            return 'returned';
-        }
-
-        if ($this->status === 'approved' && $today->lt($this->start_date)) {
-            return 'approved';
-        }
-
-        if ($this->status === 'approved' && $today->between($this->start_date, $this->due_date)) {
-            return 'on_going';
-        }
-
-        if ($today->gt($this->due_date)) {
+        if (
+            $this->status === 'on_going' &&
+            now()->gt($this->end_date) &&
+            !$this->returned_at
+        ) {
             return 'overdue';
         }
+
+        return $this->status;
     }
     
     public function item()

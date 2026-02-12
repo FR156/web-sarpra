@@ -26,7 +26,7 @@ class LoansTable
                     ->bulleted()
                     ->limitList(2) 
                     ->expandableLimitedList(),
-                TextColumn::make('computed_status')->label('status')->badge()->sortable()
+                TextColumn::make('display_status')->label('status')->badge()->sortable()
                     ->color(fn (string $state): string => match ($state) {
                         'pending' => 'gray',
                         'approved' => 'info',
