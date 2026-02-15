@@ -6,34 +6,36 @@
     </x-slot>
 
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="p-6 text-gray-900">
+        <div class="bg-white dark:bg-card-dark overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="p-6 text-gray-900 dark:text-gray-100">
                 <h3 class="text-lg font-medium mb-6">Daftar Pengajuan Peminjaman</h3>
 
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-gray-50 border-b">
-                                <th class="px-4 py-3 text-sm font-semibold text-gray-600">ID</th>
-                                <th class="px-4 py-3 text-sm font-semibold text-gray-600">Barang</th>
-                                <th class="px-4 py-3 text-sm font-semibold text-gray-600">Tgl Pinjam</th>
-                                <th class="px-4 py-3 text-sm font-semibold text-gray-600">Tgl Kembali</th>
-                                <th class="px-4 py-3 text-sm font-semibold text-gray-600 text-center">Status</th>
+                        <thead class="">
+                            <tr class="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+                                <th class="px-4 py-3 text-sm font-semibold text-gray-600 dark:text-gray-400">ID</th>
+                                <th class="px-4 py-3 text-sm font-semibold text-gray-600 dark:text-gray-400">Alasan</th>
+                                <th class="px-4 py-3 text-sm font-semibold text-gray-600 dark:text-gray-400">Barang</th>
+                                <th class="px-4 py-3 text-sm font-semibold text-gray-600 dark:text-gray-400">Tgl Pinjam</th>
+                                <th class="px-4 py-3 text-sm font-semibold text-gray-600 dark:text-gray-400">Tgl Kembali</th>
+                                <th class="px-4 py-3 text-sm font-semibold text-gray-600 dark:text-gray-400 text-center">Status</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-200">
+                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                             @forelse($loans as $loan)
                                 <tr>
-                                    <td class="px-4 py-4 text-sm text-gray-500">#{{ $loan->id }}</td>
-                                    <td class="px-4 py-4 text-sm text-gray-900">
+                                    <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300">#{{ $loan->id }}</td>
+                                    <td class="px-4 py-4 text-sm text-gray-900 dark:text-gray-100">{{ $loan->reason }}</td>
+                                    <td class="px-4 py-4 text-sm text-gray-900 dark:text-gray-100">
                                         <ul class="list-disc list-inside">
                                             @foreach($loan->itemUnits as $unit)
                                                 <li>{{ $unit->item->name }} ({{ $unit->unit_code }})</li>
                                             @endforeach
                                         </ul>
                                     </td>
-                                    <td class="px-4 py-4 text-sm text-gray-600">{{ $loan->start_date }}</td>
-                                    <td class="px-4 py-4 text-sm text-gray-600">{{ $loan->due_date }}</td>
+                                    <td class="px-4 py-4 text-sm text-gray-600 dark:text-gray-400">{{ $loan->start_date }}</td>
+                                    <td class="px-4 py-4 text-sm text-gray-600 dark:text-gray-400">{{ $loan->due_date }}</td>
                                     <td class="px-4 py-4 text-sm text-center">
                                         @php
                                             $statusColor = match($loan->status) {
@@ -54,7 +56,7 @@
                                                 <button 
                                                     wire:click="cancelLoan({{ $loan->id }})"
                                                     wire:confirm="Yakin ingin membatalkan pesanan ini?"
-                                                    class="text-xs text-red-600 hover:underline font-semibold">
+                                                    class="text-xs text-red-600 dark:text-red-700 hover:underline font-semibold">
                                                     Batalkan Request
                                                 </button>
                                             @endif

@@ -6,32 +6,33 @@
     </x-slot>
 
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+        <div class="bg-white dark:bg-card-dark overflow-hidden shadow-sm sm:rounded-lg p-6">
             @if(empty($cart))
                 <div class="text-center py-8">
-                    <p class="text-gray-500">Keranjang masih kosong.</p>
-                    <a href="{{ route('catalog') }}" class="text-indigo-600 underline">Kembali ke Katalog</a>
+                    <p class="text-gray-500 dark:text-gray-400">Keranjang masih kosong.</p>
+                    <a href="{{ route('catalog') }}" class="text-indigo-600 dark:text-indigo-400 underline">Kembali ke Katalog</a>
                 </div>
             @else
                 <table class="w-full text-left mb-6">
                     <thead>
-                        <tr class="border-b text-gray-600">
+                        <tr class="border-b border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">
                             <th class="py-2">Nama Barang</th>
                             <th class="py-2">Kategori</th>
-                            <th class="py-2 text-center">Jumlah</th> <th class="py-2 text-right">Aksi</th>
+                            <th class="py-2 text-center">Jumlah</th> 
+                            <th class="py-2 text-right">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($cart as $id => $details)
-                            <tr class="border-b">
-                                <td class="py-3 font-medium">{{ $details['name'] }}</td>
-                                <td class="py-3 text-gray-500">{{ $details['category'] }}</td>
+                            <tr class="border-b border-gray-200 dark:border-gray-700">
+                                <td class="py-3 text-gray-500 dark:text-gray-400 font-medium max-w-4">{{ $details['name'] }}</td>
+                                <td class="py-3 text-gray-500 dark:text-gray-400">{{ $details['category'] }}</td>
                                 <td class="py-3 text-center">
-                                    <span class="bg-gray-100 px-3 py-1 rounded-full font-bold">
+                                    <span class="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 px-3 py-1 rounded-full font-bold">
                                         {{ $details['qty'] ?? 1 }} </span>
                                 </td>
                                 <td class="py-3 text-right">
-                                    <button wire:click="removeFromCart({{ $id }})" class="text-red-500 hover:text-red-700">
+                                    <button wire:click="removeFromCart({{ $id }})" class="text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-600">
                                         Hapus
                                     </button>
                                 </td>
@@ -43,12 +44,16 @@
                 <div class="max-w-xs">
                     <div class="grid lg:flex gap-4">
                         <div class="grid">
-                            <label class="block text-sm font-medium text-gray-700">Rencana Tanggal Pinjam</label>
-                            <input type="date" wire:model="startDate" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 mb-4">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">Alasan Meminjam</label>
+                            <input type="text" wire:model="reason" class="mt-1 block w-sm lg:w-lg bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-50 rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:ring-indigo-500 mb-4">
                         </div>
                         <div class="grid">
-                            <label class="block text-sm font-medium text-gray-700">Rencana Tanggal Kembali</label>
-                            <input type="date" wire:model="dueDate" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 mb-4">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">Rencana Tanggal Pinjam</label>
+                            <input type="date" wire:model="startDate" class="mt-1 block w-full bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-50 rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:ring-indigo-500 mb-4">
+                        </div>
+                        <div class="grid">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">Rencana Tanggal Kembali</label>
+                            <input type="date" wire:model="dueDate" class="mt-1 block w-full bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-50 rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:ring-indigo-500 mb-4">
                         </div>
                     </div>
                     

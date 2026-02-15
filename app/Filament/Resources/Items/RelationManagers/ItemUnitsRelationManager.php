@@ -8,6 +8,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema; // Gunakan Schema sesuai versi v4 lo
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
@@ -17,41 +18,6 @@ use Filament\Actions\DeleteBulkAction;
 class ItemUnitsRelationManager extends RelationManager
 {
     protected static string $relationship = 'itemUnits';
-
-    public function form(Schema $schema): Schema
-    {
-        return $schema
-            ->components([
-                TextInput::make('unit_code')
-                    ->label('Kode Unit / No. Aset')
-                    ->required()
-                    ->unique(ignoreRecord: true) // Supaya kode unit gak kembar
-                    ->maxLength(255),
-
-                Select::make('condition')
-                    ->label('Kondisi Barang')
-                    ->options([
-                        'good' => 'Bagus',
-                        'minor_damage' => 'Rusak Ringan',
-                        'major_damage' => 'Rusak Berat',
-                    ])
-                    ->default('good')
-                    ->required()
-                    ->native(false),
-
-                Select::make('status')
-                    ->label('Status Ketersediaan')
-                    ->options([
-                        'available' => 'Tersedia',
-                        'on_loan' => 'Dipinjam',
-                        'maintenance' => 'Dalam Perbaikan',
-                    ])
-                    ->default('available')
-                    ->required()
-                    ->native(false),
-            ]);
-    }
-
     public function table(Table $table): Table
     {
         return $table
@@ -81,8 +47,25 @@ class ItemUnitsRelationManager extends RelationManager
                     }),
             ])
             ->headerActions([
-                CreateAction::make()
-                    ->label('Tambah Unit Baru'),
+Action::make('createBulkUnits')
+                ->label('Add Unit')
+                ->icon('heroicon-o-plus')
+                ->form([
+                    TextInput::make('qty')
+                        ->label('Jumlah Unit')
+                        ->numeric()
+                        ->default(1)
+                        ->minValue(1)
+                        ->required(),
+                ])
+                ->action(function (array $data, $livewire) {
+                    $item = $livewire->getOwnerRecord();
+
+                    for ($i = 0; $i < $data['qty']; $i++) {
+                        $item->itemUnits()->create([
+                        ]);
+                    }
+                })
             ])
             ->recordActions([
                 EditAction::make(),

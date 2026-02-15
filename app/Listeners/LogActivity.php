@@ -8,6 +8,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use App\Models\ActivityLog;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Auth\Events\Login;
+use SebastianBergmann\CodeCoverage\Test\TestSize\Unknown;
 
 class LogActivity
 {
@@ -25,7 +26,7 @@ class LogActivity
     public function handle(ActivityLogged $event): void
     {
         $user = auth()->user();
-        $roleName = ucfirst($user->role ?? 'User'); 
+        $roleName = ucfirst($user->role); 
         $detailedDescription = "[{$roleName}] {$user->name}: {$event->description}";
         
         ActivityLog::create([
@@ -38,3 +39,4 @@ class LogActivity
         ]);
     }
 }
+

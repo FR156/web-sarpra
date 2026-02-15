@@ -85,32 +85,60 @@ class Catalog extends Component
 
         $item = Item::find($itemId);
         
+        // old code
         // Cek apakah stok unit yang 'available' cukup
-        $availableCount = $item->itemUnits()->where('status', 'available')->count();
+        // $availableCount = $item->itemUnits()->where('status', 'available')->count();
         
-        if ($qty > $availableCount) {
-            session()->flash('error', "Stok tidak mencukupi! Hanya ada $availableCount unit.");
-            return;
-        }
+        // if ($qty > $availableCount) {
+        //     session()->flash('error', "Stok tidak mencukupi! Hanya ada $availableCount unit.");
+        //     return;
+        // }
         
         // Ambil data cart yang sudah ada di session, kalau belum ada set array kosong
         $cart = session()->get('cart', []);
 
+        // $item = Item::find($itemId);
+
         // Cek apakah barang sudah ada di keranjang
+        // if (isset($cart[$itemId])) {
+        //     session()->flash('error', 'Barang sudah ada di keranjang!');
+        //     return;
+        // }
+
+        // // Masukkan data barang ke array cart
+        // $cart[$itemId] = [
+        //     'id' => $item->id,
+        //     'name' => $item->name,
+        //     'category' => $item->category->name ?? 'Umum',
+        //     'qty' => $qty,
+        // ];
+
         if (isset($cart[$itemId])) {
-            session()->flash('error', 'Barang sudah ada di keranjang!');
-            return;
+            $cartQty = $cart[$itemId]['qty'];
+            $availableQty = $item->itemUnits()->where('status', 'available')->count();
+
+            // Check if adding the quantity will exceed the available stock
+            if (($cartQty + $qty) > $availableQty) {
+                session()->flash('error', "Stok tidak mencukupi! Hanya tersedia $availableQty unit.");
+                return;
+            }
+            
+            $cart[$itemId]['qty'] += $qty;
+        } else {
+            $availableQty = $item->itemUnits()->where('status', 'available')->count();
+
+            if ($qty > $availableQty) {
+                session()->flash('error', "Stok tidak mencukupi! Hanya tersedia $availableQty unit.");
+                return;
+            }
+
+            $cart[$itemId] = [
+                'id' => $item->id,
+                'name' => $item->name,
+                'category' => $item->category->name ?? 'Umum',
+                'qty' => $qty,
+            ];
         }
-
-        $item = \App\Models\Item::find($itemId);
-
-        // Masukkan data barang ke array cart
-        $cart[$itemId] = [
-            'id' => $item->id,
-            'name' => $item->name,
-            'category' => $item->category->name ?? 'Umum',
-            'qty' => $qty,
-        ];
 
         // Simpan kembali ke session
         session()->put('cart', $cart);

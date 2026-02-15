@@ -19,6 +19,9 @@ class ItemForm
                         TextInput::make('name')
                             ->required()
                             ->maxLength(255),
+                        TextInput::make('prefix')
+                            ->label('Kode Prefix')
+                            ->required(),
                         Select::make('category_id')
                             ->relationship('category', 'name') // Otomatis ambil dari model Category
                             ->searchable()

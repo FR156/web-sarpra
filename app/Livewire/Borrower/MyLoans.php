@@ -28,7 +28,7 @@ class MyLoans extends Component
 
     public function cancelLoan($loanId)
     {
-        $loan = \App\Models\Loan::where('id', $loanId)
+        $loan = Loan::where('id', $loanId)
             ->where('user_id', auth()->id())
             ->where('status', 'pending')
             ->first();
