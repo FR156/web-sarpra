@@ -7,7 +7,6 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
-use Illuminate\Support\Facades\Date;
 
 class LoanForm
 {
@@ -20,6 +19,7 @@ class LoanForm
                         ->label('Peminjam')
                         ->relationship('user', 'name', fn ($query) => $query->where('role', 'borrower'))
                         ->preload()
+                        ->searchable()
                         ->required(),
 
                     TextInput::make('reason')
@@ -27,12 +27,13 @@ class LoanForm
                         ->required(),
 
                     DateTimePicker::make('start_date')->required(),
+
                     DateTimePicker::make('due_date')->required(),
 
                     Select::make('item_units')
                         ->label('Barang yang Dipinjam')
                         ->multiple()
-                        ->relationship('itemUnits', 'unit_code', fn ($query) => $query->where('status', 'available'))
+                        ->relationship('loanItems.loanItemUnits.itemUnit', 'unit_code', fn ($query) => $query->where('status', 'available')->orderBy('unit_code'))
                         ->preload()
                         ->required(),
                 ])->columns(2),

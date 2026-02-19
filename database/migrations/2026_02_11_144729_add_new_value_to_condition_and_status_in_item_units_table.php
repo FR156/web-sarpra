@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('item_units', function (Blueprint $table) {
             $table->enum('condition', ['good', 'minor_damage', 'major_damage', 'lost'])->default('good')->change();
-            $table->enum('status', ['on_loan', 'available', 'maintenance', 'unavailable'])->default('available')->change();
+            $table->enum('status', ['available', 'booked', 'on_loan', 'maintenance', 'unavailable'])->default('available')->change();
         });
     }
 

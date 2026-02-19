@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Users\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkAction;
+use Filament\Actions\Action;
 use Illuminate\Database\Eloquent\Collection;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -25,7 +26,9 @@ class UsersTable
         return $table
             ->columns([
                 TextColumn::make('name')->searchable(),
+
                 TextColumn::make('email')->searchable(),
+
                 TextColumn::make('role')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
@@ -33,13 +36,16 @@ class UsersTable
                         'staff' => 'warning',
                         'borrower' => 'success',
                     }),
+
                 IconColumn::make('is_active')
                     ->boolean()
                     ->label('Status'),
+
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
@@ -52,6 +58,7 @@ class UsersTable
                         'staff' => 'Staff',
                         'borrower' => 'Borrower',
                     ]),
+
                 TernaryFilter::make('is_active')
                     ->label('Status')
                     ->placeholder('All User')
@@ -61,7 +68,9 @@ class UsersTable
             ])
             ->recordActions([
                 EditAction::make(),
-                DeleteAction::make()
+
+                Action::make('deactivate')
+                    ->color('danger')
                     ->requiresConfirmation()
                     ->label('Deactivate')
                     ->modalHeading('Deactivate User')
@@ -69,13 +78,28 @@ class UsersTable
                     ->modalSubmitActionLabel('Yes, deactivate user')
                     ->action(function ($record) {
                         $record->update(['is_active' => false]);
-
                         Notification::make()
                             ->title('User Deactivated')
                             ->success()
                             ->send();
                     })
-                    ->hidden(fn ($record) => $record->id === auth()->id()|| $record->id === 1),
+                    ->hidden(fn ($record) => $record->id === auth()->id() || $record->id === 1 || !$record->is_active),
+
+                Action::make('activate')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->label('Activate')
+                    ->modalHeading('Activate User')
+                    ->modalDescription('Are you sure you want to activate this user?')
+                    ->modalSubmitActionLabel('Yes, activate user')
+                    ->action(function ($record) {
+                        $record->update(['is_active' => true]);
+                        Notification::make()
+                            ->title('User Activated')
+                            ->success()
+                            ->send();
+                    })
+                    ->hidden(fn ($record) => $record->id === auth()->id() || $record->id === 1 || $record->is_active),
             ])
             ->toolbarActions([
                 ActionGroup::make([
@@ -88,7 +112,6 @@ class UsersTable
                             $filteredRecords = $records->filter(function ($record) {
                                 return $record->id !== auth()->id() && $record->id !== 1;
                             });
-
                             $filteredRecords->each->update(['is_active' => false]);
                             $count = $filteredRecords->count();
                             $skipped = $records->count() - $count;
@@ -98,6 +121,7 @@ class UsersTable
                                 ->success()
                                 ->send();
                         }),
+
                     BulkAction::make('activate_selected')
                         ->label('Activate Selected User')
                         ->icon('heroicon-o-check-circle')

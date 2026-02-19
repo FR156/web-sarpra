@@ -29,8 +29,8 @@
                                     <td class="px-4 py-4 text-sm text-gray-900 dark:text-gray-100">{{ $loan->reason }}</td>
                                     <td class="px-4 py-4 text-sm text-gray-900 dark:text-gray-100">
                                         <ul class="list-disc list-inside">
-                                            @foreach($loan->itemUnits as $unit)
-                                                <li>{{ $unit->item->name }} ({{ $unit->unit_code }})</li>
+                                            @foreach($loan->loanItems as $unit)
+                                                <li>{{ $unit->item->name }} ({{ $unit->quantity }})</li>
                                             @endforeach
                                         </ul>
                                     </td>

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::table('item_units', function (Blueprint $table) {
             $table->integer('sort_order')->after('unit_code');
             $table->unique(['item_id', 'sort_order']);
+            $table->dateTime('last_used_at')->nullable()->index()->after('status');
             $table->softDeletes();
         });
     }

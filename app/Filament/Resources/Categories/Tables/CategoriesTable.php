@@ -15,6 +15,7 @@ class CategoryTable
                     ->label('Nama Kategori')
                     ->searchable()
                     ->sortable(),
+                    
                 TextColumn::make('items_count')
                     ->counts('items')
                     ->label('Total Barang')

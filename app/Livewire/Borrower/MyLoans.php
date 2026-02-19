@@ -17,7 +17,7 @@ class MyLoans extends Component
     {
         // Ambil peminjaman milik user yang sedang login, urutkan dari yang terbaru
         $loans = Loan::where('user_id', auth()->id())
-            ->with(['itemUnits.item']) // Load relasi sampai ke nama barangnya
+            ->with(['loanItems', 'assignedUnits']) // Load relasi sampai ke nama barangnya
             ->latest()
             ->paginate(10);
 

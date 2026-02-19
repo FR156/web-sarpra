@@ -24,23 +24,28 @@ class Loan extends Model
         'returned_at' => 'datetime',
     ];
 
-    public function getDisplayStatusAttribute()
-    {
-        if (
-            $this->status === 'on_going' &&
-            now()->gt($this->end_date) &&
-            !$this->returned_at
-        ) {
-            return 'overdue';
-        }
+    // public function getDisplayStatusAttribute()
+    // {
+    //     if (
+    //         $this->status === 'on_going' &&
+    //         now()->gt($this->end_date) &&
+    //         !$this->returned_at
+    //     ) {
+    //         return 'overdue';
+    //     }
 
-        return $this->status;
-    }
+    //     return $this->status;
+    // }
     
-    public function item()
-    {
-        return $this->belongsTo(Item::class);
-    }
+    // public function item()
+    // {
+    //     return $this->belongsTo(Item::class);
+    // }
+
+    // public function itemUnits()
+    // {
+    //     return $this->belongsToMany(ItemUnit::class, 'loan_items');
+    // }
 
     public function user()
     {
@@ -57,10 +62,14 @@ class Loan extends Model
         return $this->hasMany(LoanItem::class);
     }
 
-    public function itemUnits()
+    public function assignedUnits()
     {
-        return $this->belongsToMany(ItemUnit::class, 'loan_items');
+        return $this->hasManyThrough(
+            LoanItemUnit::class,
+            LoanItem::class
+        );
     }
+
 
     public function isOverdue()
     {

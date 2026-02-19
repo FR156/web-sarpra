@@ -42,35 +42,6 @@ class Catalog extends Component
         }])->find($itemId);
     }
 
-    public function requestLoan()
-    {
-        $this->validate([
-            'dueDate' => 'required|after:today',
-        ]);
-
-        // Ambil 1 unit yang tersedia secara otomatis
-        $unit = $this->selectedItem->itemUnits->first();
-
-        DB::transaction(function () use ($unit) {
-            $loan = Loan::create([
-                'user_id' => auth()->id(),
-                'start_date' => now(), // Default request saat ini
-                'due_date' => $this->dueDate,
-                'status' => 'pending',
-            ]);
-
-            // Hubungkan ke tabel pivot loan_items
-            $loan->itemUnits()->attach($unit->id);
-            
-            // Opsional: Langsung tandai unit jadi 'maintenance' atau status lain 
-            // agar tidak dipesan orang lain saat 'pending'
-            $unit->update(['status' => 'available']); 
-        });
-
-        session()->flash('message', 'Permintaan peminjaman berhasil dikirim!');
-        $this->selectedItem = null;
-    }
-
     public $quantity = [];
 
     // Tambahkan di dalam class Catalog
@@ -84,34 +55,8 @@ class Catalog extends Component
         }
 
         $item = Item::find($itemId);
-        
-        // old code
-        // Cek apakah stok unit yang 'available' cukup
-        // $availableCount = $item->itemUnits()->where('status', 'available')->count();
-        
-        // if ($qty > $availableCount) {
-        //     session()->flash('error', "Stok tidak mencukupi! Hanya ada $availableCount unit.");
-        //     return;
-        // }
-        
-        // Ambil data cart yang sudah ada di session, kalau belum ada set array kosong
+
         $cart = session()->get('cart', []);
-
-        // $item = Item::find($itemId);
-
-        // Cek apakah barang sudah ada di keranjang
-        // if (isset($cart[$itemId])) {
-        //     session()->flash('error', 'Barang sudah ada di keranjang!');
-        //     return;
-        // }
-
-        // // Masukkan data barang ke array cart
-        // $cart[$itemId] = [
-        //     'id' => $item->id,
-        //     'name' => $item->name,
-        //     'category' => $item->category->name ?? 'Umum',
-        //     'qty' => $qty,
-        // ];
 
         if (isset($cart[$itemId])) {
             $cartQty = $cart[$itemId]['qty'];

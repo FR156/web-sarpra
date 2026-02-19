@@ -22,18 +22,32 @@ class ItemUnit extends Model
         return $this->belongsTo(Item::class);
     }
 
-    public function loanItems()
+    // public function loanItems()
+    // {
+    //     return $this->hasMany(LoanItem::class);
+    // }
+
+    // public function loans()
+    // {
+    //     return $this->belongsToMany(
+    //         Loan::class,
+    //         'loan_items'
+    //     );
+    // }
+
+    public function loanItemUnits()
     {
-        return $this->hasMany(LoanItem::class);
+        return $this->hasMany(LoanItemUnit::class);
     }
 
-    public function loans()
+    public function activeLoanItemUnit()
     {
-        return $this->belongsToMany(
-            Loan::class,
-            'loan_items'
-        );
+        return $this->loanItemUnits()
+            ->whereHas('loanItem.loan', function ($q) {
+                $q->whereIn('status', ['approved', 'on_going']);
+            });
     }
+
 
     public function activeLoan()
     {

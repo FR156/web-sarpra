@@ -22,12 +22,12 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('loan_items', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('loan_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('item_unit_id')->constrained('item_units')->cascadeOnDelete();
-            $table->timestamps();
-        });
+        // Schema::create('loan_items', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->foreignId('loan_id')->constrained()->cascadeOnDelete();
+        //     $table->foreignId('item_unit_id')->constrained('item_units')->cascadeOnDelete();
+        //     $table->timestamps();
+        // });
     }
 
     /**

@@ -2,14 +2,11 @@
 
 namespace App\Filament\Resources\Items\RelationManagers;
 
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Schemas\Schema; // Gunakan Schema sesuai versi v4 lo
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Actions\Action;
-use Filament\Actions\CreateAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\BulkActionGroup;
@@ -41,21 +38,23 @@ class ItemUnitsRelationManager extends RelationManager
                     ->label('Status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
-                        'available' => 'info',
+                        'available' => 'success',
+                        'booked' => 'info',
                         'on_loan' => 'warning',
                         'maintenance' => 'danger',
+                        'unavailable' => 'danger',
                     }),
             ])
             ->headerActions([
-Action::make('createBulkUnits')
-                ->label('Add Unit')
-                ->icon('heroicon-o-plus')
-                ->form([
-                    TextInput::make('qty')
-                        ->label('Jumlah Unit')
-                        ->numeric()
-                        ->default(1)
-                        ->minValue(1)
+                Action::make('createBulkUnits')
+                    ->label('Add Unit')
+                    ->icon('heroicon-o-plus')
+                    ->schema([
+                        TextInput::make('qty')
+                            ->label('Jumlah Unit')
+                            ->numeric()
+                            ->default(1)
+                            ->minValue(1)
                         ->required(),
                 ])
                 ->action(function (array $data, $livewire) {

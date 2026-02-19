@@ -3,6 +3,8 @@
 namespace App\Livewire\Borrower;
 
 use App\Models\Loan;
+use App\Models\LoanItem;
+use App\Models\LoanItemUnit;
 use App\Models\Item;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
@@ -49,20 +51,11 @@ class Cart extends Component
                 'status' => 'pending',
             ]);
 
-            // Loop setiap barang di cart untuk dihubungkan ke loan
             foreach ($this->cart as $cartItem) {
-                $item = Item::find($cartItem['id']);
-                // Ambil satu unit yang tersedia
-                $units = $item->itemUnits()
-                    ->where('status', 'available')
-                    ->limit($cartItem['qty'])
-                    ->get();
-                    
-                foreach ($units as $unit) {
-                    $loan->itemUnits()->attach($unit->id);
-                    // tandai unit agar tidak dipinjam orang lain (pending)
-                    $unit->update(['status' => 'on_loan']);
-                }
+                $loan->loanItems()->create([
+                    'item_id' => $cartItem['id'],
+                    'quantity' => $cartItem['qty'],
+                ]);
             }
             
             $record = $loan;

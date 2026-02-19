@@ -10,13 +10,10 @@ use App\Filament\Resources\Items\Tables\ItemsTable;
 use App\Models\Item;
 use BackedEnum;
 use UnitEnum;
-use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use App\Filament\Resources\Items\RelationManagers\ItemUnitsRelationManager;
-use Illuminate\Database\Eloquent\Relations\Relation;
 
 class ItemResource extends Resource
 {
