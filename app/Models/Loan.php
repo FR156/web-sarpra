@@ -79,7 +79,16 @@ class Loan extends Model
     protected static function booted(): void
     {
         static::deleting(function (Loan $loan) {
-            $loan->itemUnits()->update(['status' => 'available']);
+            // Eager load the relationships to avoid N+1 queries
+            $loan->load('loanItems.loanItemUnits.itemUnit');
+            
+            foreach ($loan->loanItems as $loanItem) {
+                foreach ($loanItem->loanItemUnits as $loanItemUnit) {
+                    if ($loanItemUnit->itemUnit) {
+                        $loanItemUnit->itemUnit->update(['status' => 'available']);
+                    }
+                }
+            }
         });
     }
 }

@@ -6,7 +6,10 @@ use Filament\Schemas\Schema;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Hidden;
 use Filament\Schemas\Components\Section;
+use Illuminate\Support\Str;
 
 class LoanForm
 {
@@ -26,17 +29,62 @@ class LoanForm
                         ->label('Alasan Peminjaman')
                         ->required(),
 
-                    DateTimePicker::make('start_date')->required(),
+                    DateTimePicker::make('start_date')
+                        ->required()
+                        ->native(false),
 
-                    DateTimePicker::make('due_date')->required(),
-
-                    Select::make('item_units')
-                        ->label('Barang yang Dipinjam')
-                        ->multiple()
-                        ->relationship('loanItems.loanItemUnits.itemUnit', 'unit_code', fn ($query) => $query->where('status', 'available')->orderBy('unit_code'))
-                        ->preload()
-                        ->required(),
+                    DateTimePicker::make('due_date')
+                        ->required()
+                        ->native(false)
+                        ->after('start_date'),
                 ])->columns(2),
+
+            Section::make('Barang yang Dipinjam')
+                ->schema([
+                    Repeater::make('loanItems')
+                        ->label('')
+                        ->relationship()
+                        ->schema([
+                            Select::make('item_id')
+                                ->label('Pilih Barang')
+                                ->options(\App\Models\Item::pluck('name', 'id'))
+                                ->searchable()
+                                ->preload()
+                                ->required()
+                                ->reactive()
+                                ->afterStateUpdated(fn ($state, callable $set) => $set('quantity', null)),
+
+                            TextInput::make('quantity')
+                                ->label('Jumlah')
+                                ->numeric()
+                                ->required()
+                                ->minValue(1)
+                                ->reactive()
+                                ->afterStateUpdated(function ($state, callable $set, callable $get) {
+                                    $itemId = $get('item_id');
+                                    if ($itemId) {
+                                        $available = \App\Models\ItemUnit::where('item_id', $itemId)
+                                            ->where('status', 'available')
+                                            ->count();
+                                        
+                                        if ($state > $available) {
+                                            $set('quantity', $available);
+                                            // Optionally show notification
+                                        }
+                                    }
+                                }),
+
+                            // Hidden field untuk menyimpan unit yang dipilih nantinya
+                            Hidden::make('selected_units'),
+                        ])
+                        ->columns(2)
+                        ->minItems(1)
+                        ->maxItems(10)
+                        ->defaultItems(1)
+                        ->addActionLabel('Tambah Barang')
+                        ->reorderable(false)
+                        ->collapsible(),
+                ]),
         ]);
     }
 }
