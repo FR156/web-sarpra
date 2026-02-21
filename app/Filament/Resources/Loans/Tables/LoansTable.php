@@ -4,16 +4,16 @@ namespace App\Filament\Resources\Loans\Tables;
 
 use App\Models\ItemUnit;
 use App\Events\ActivityLogged;
-use Dom\Text;
-use Illuminate\Support\Facades\DB;
+use Filament\Actions\Action;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
-use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Radio;
-use Filament\Forms\Components\Repeater;
+use Filament\Infolists\Components\TextEntry;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\HtmlString;
 
 class LoansTable
 {
@@ -35,11 +35,17 @@ class LoansTable
                     ->label('Alasan Peminjaman')
                     ->searchable(),
 
-                TextColumn::make('loanItems.item.name')
+                TextColumn::make('loanItems')
                     ->label('Daftar Barang')
+                    ->state(function ($record) {
+                        return $record->loanItems->map(function ($loanItem) {
+                            return $loanItem->item->name . ' (' . $loanItem->quantity . ' unit)';
+                        })->toArray();
+                    })
                     ->listWithLineBreaks()
                     ->bulleted()
-                    ->limitList(2),
+                    ->limitList(2)
+                    ->expandableLimitedList(),
 
                 TextColumn::make('loanItems.loanItemunits.itemUnit.unit_code')
                     ->label('Daftar Unit')
@@ -80,20 +86,6 @@ class LoansTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->recordActions([
-                // Action::make('approve')
-                //     ->label('Setujui')
-                //     ->icon('heroicon-o-check-circle')
-                //     ->color('success')
-                //     ->visible(fn ($record) => $record->status === 'pending')
-                //     ->action(function ($record) {
-                //         $record->update([
-                //             'status' => 'approved',
-                //             'approver_id' => auth()->id(),
-                //         ]);
-                //         $record->itemUnits()->update(['status' => 'on_loan']);
-                //         ActivityLogged::dispatch('approved', "Peminjaman diterima (id peminjaman:{$record->id})", $record);
-                //     }),
-
                 Action::make('approve')
                     ->label('Setujui')
                     ->icon('heroicon-o-check-circle')
@@ -110,44 +102,21 @@ class LoansTable
                             ->required()
                             ->reactive(),
 
-                        // Field untuk menampung units yang dipilih per item
-                        // Repeater::make('item_assignments')
-                        //     ->label('Assign Unit per Item')
-                        //     ->schema([
-                        //         TextInput::make('item_name')
-                        //             ->label('Nama Item')
-                        //             ->disabled()
-                        //             ->default(fn ($record) => $record->item->name ?? '-'),
-
-                        //         TextInput::make('quantity')
-                        //             ->label('Jumlah Dibutuhkan')
-                        //             ->disabled()
-                        //             ->default(fn ($record) => $record->quantity),
-
-                        //         Select::make('selected_units')
-                        //             ->label('Pilih Unit')
-                        //             ->multiple()
-                        //             ->options(function ($record) {
-                        //                 return ItemUnit::where('item_id', $record->item_id)
-                        //                     ->where('status', 'available')
-                        //                     ->pluck('unit_code', 'id')
-                        //                     ->toArray();
-                        //             })
-                        //             ->required()
-                        //             ->rules([
-                        //                 fn ($record) => function ($attribute, $value, $fail) use ($record) {
-                        //                     if (count($value) != $record->quantity) {
-                        //                         $fail("Jumlah unit yang dipilih harus {$record->quantity} unit.");
-                        //                     }
-                        //                 }
-                        //             ])
-                        //             ->visible(fn ($get) => $get('../../assign_mode') === 'manual'),
-                        //     ])
-                        //     ->itemLabel(fn (array $state): ?string => $state['item_name'] ?? null)
-                        //     ->defaultItems(0)
-                        //     ->visible(fn ($get) => $get('assign_mode') === 'manual'),
-
-                        // Alternatif: Select grouping per item
+                        TextEntry::make('unit_requirements')
+                            ->label('Kebutuhan Unit')
+                            ->state(function ($record) {
+                                $items = [];
+                                foreach ($record->loanItems as $loanItem) {
+                                    $items[] = $loanItem->item->name . ' = ' . $loanItem->quantity . ' unit';
+                                }
+                                
+                                // Format dengan bullet points dan line breaks
+                                return new HtmlString(
+                                    '• ' . implode('<br>• ', $items)
+                                );
+                            })
+                            ->visible(fn ($get) => $get('assign_mode') === 'manual'),
+                            
                         Select::make('selected_units_grouped')
                             ->label('Pilih Unit')
                             ->multiple()
@@ -262,7 +231,6 @@ class LoansTable
                                 }
                             }
 
-                            // Update status loan
                             $record->update([
                                 'status' => 'approved',
                                 'approver_id' => auth()->id(),
@@ -297,7 +265,6 @@ class LoansTable
                         $record->update([
                             'status' => 'on_going',
                         ]);
-                        // $record->itemUnits()->update(['status' => 'on_loan']); // sudah ada dalam action approve
                         ActivityLogged::dispatch('on_going', "Peminjaman dimulai (id peminjaman:{$record->id})", $record);
                     }),
 

@@ -30,7 +30,7 @@
                                     <td class="px-4 py-4 text-sm text-gray-900 dark:text-gray-100">
                                         <ul class="list-disc list-inside">
                                             @foreach($loan->loanItems as $unit)
-                                                <li>{{ $unit->item->name }} ({{ $unit->quantity }})</li>
+                                                <li>{{ $unit->item->name }} ({{ $unit->quantity }} unit)</li>
                                             @endforeach
                                         </ul>
                                     </td>

@@ -20,6 +20,7 @@ class LoanResource extends Resource
 {
     protected static ?string $model = Loan::class;
 
+    protected static ?string $navigationLabel = 'Peminjaman';
     protected static ?int $navigationSort = 2;
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-clipboard-document-check';
 
@@ -51,7 +52,7 @@ class LoanResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return static::getModel()::count();
+        return static::getModel()::where('status', 'pending')->count();
     }
 
     public static function getNavigationBadgeTooltip(): ?string
