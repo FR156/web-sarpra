@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Items;
 use App\Filament\Resources\Items\Pages\CreateItem;
 use App\Filament\Resources\Items\Pages\EditItem;
 use App\Filament\Resources\Items\Pages\ListItems;
+use App\Filament\Resources\Items\Pages\ViewItem;
 use App\Filament\Resources\Items\Schemas\ItemForm;
 use App\Filament\Resources\Items\Tables\ItemsTable;
 use App\Models\Item;
@@ -18,6 +19,8 @@ use App\Filament\Resources\Items\RelationManagers\ItemUnitsRelationManager;
 class ItemResource extends Resource
 {
     protected static ?string $model = Item::class;
+
+    protected static ?string $navigationLabel = 'Barang';
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-archive-box';
     protected static string|UnitEnum|null $navigationGroup = 'Manajemen Barang';
@@ -44,6 +47,7 @@ class ItemResource extends Resource
         return [
             'index' => ListItems::route('/'),
             'create' => CreateItem::route('/create'),
+            'view' => ViewItem::route('/{record}'),
             'edit' => EditItem::route('/{record}/edit'),
         ];
     }

@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Loans;
 use App\Filament\Resources\Loans\Pages\CreateLoan;
 use App\Filament\Resources\Loans\Pages\EditLoan;
 use App\Filament\Resources\Loans\Pages\ListLoans;
+use App\Filament\Resources\Loans\Pages\ViewLoan;
 use App\Filament\Resources\Loans\Schemas\LoanForm;
 use App\Filament\Resources\Loans\Tables\LoansTable;
 use App\Models\Loan;
@@ -46,6 +47,7 @@ class LoanResource extends Resource
         return [
             'index' => ListLoans::route('/'),
             'create' => CreateLoan::route('/create'),
+            'view' => ViewLoan::route('/{record}'),
             'edit' => EditLoan::route('/{record}/edit'),
         ];
     }
@@ -57,6 +59,6 @@ class LoanResource extends Resource
 
     public static function getNavigationBadgeTooltip(): ?string
     {
-        return 'The number of loans';
+        return 'Peminjaman pending';
     }
 }

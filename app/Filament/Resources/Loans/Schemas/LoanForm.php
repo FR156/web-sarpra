@@ -2,13 +2,17 @@
 
 namespace App\Filament\Resources\Loans\Schemas;
 
+use Dom\Text;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Hidden;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
 use Illuminate\Support\Str;
 
 class LoanForm
@@ -85,6 +89,63 @@ class LoanForm
                         ->reorderable(false)
                         ->collapsible(),
                 ]),
+            
+            // Section::make('Detail Barang & Unit')
+            //     ->schema([
+            //         Tabs::make('Loans')
+            //             ->tabs([
+            //                 Tab::make('Daftar Barang')
+            //                     ->schema([
+            //                         Repeater::make('loanItems')
+            //                             ->relationship()
+            //                             ->schema([
+            //                                 TextInput::make('item.name')
+            //                                     ->label('Nama Barang')
+            //                                     ->disabled()
+            //                                     ->dehydrated(false),
+
+            //                                 TextInput::make('quantity')
+            //                                     ->label('Jumlah')
+            //                                     ->disabled()
+            //                                     ->dehydrated(false),
+            //                             ])
+            //                             ->columns(2)
+            //                             ->disabled()
+            //                             ->dehydrated(false),
+            //                     ]),
+
+            //                 Tab::make('Unit yang Dipinjam')
+            //                     ->schema([
+            //                         Repeater::make('loanItems')
+            //                             ->relationship()
+            //                             ->schema([
+            //                                 TextEntry::make('item_name')
+            //                                     ->label('Barang')
+            //                                     ->schema(fn ($get, $record) => $record?->item->name),
+
+            //                                 Repeater::make('loanItemUnits')
+            //                                     ->relationship()
+            //                                     ->schema([
+            //                                         TextInput::make('itemUnit.unit_code')
+            //                                             ->label('Kode Unit')
+            //                                             ->disabled()
+            //                                             ->dehydrated(false),
+
+            //                                         TextInput::make('itemUnit.condition')
+            //                                             ->label('Kondisi')
+            //                                             ->disabled()
+            //                                             ->dehydrated(false),
+            //                                     ])
+            //                                     ->columns(2)
+            //                                     ->disabled()
+            //                                     ->dehydrated(false)
+            //                                     ->label('Unit'),
+            //                             ])
+            //                             ->disabled()
+            //                             ->dehydrated(false),
+            //                     ]),
+            //             ]),
+            //     ]),
         ]);
     }
 }

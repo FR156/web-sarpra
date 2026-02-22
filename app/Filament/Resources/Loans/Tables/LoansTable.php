@@ -247,12 +247,14 @@ class LoansTable
                     ->requiresConfirmation()
                     ->visible(fn ($record) => $record->status === 'pending')
                     ->action(function ($record) {
-                        $record->update([
-                            'status' => 'rejected',
-                            'approver_id' => auth()->id(),
-                        ]);
-                        $record->loanItems()->loanItemUnits()->update(['status' => 'available']);
-                        ActivityLogged::dispatch('rejected', "Peminjaman ditolak (id peminjaman:{$record->id})", $record);
+                        DB::transaction(function () use ($record) {
+                            $record->update([
+                                'status' => 'rejected',
+                                'approver_id' => auth()->id(),
+                            ]);
+                            
+                            ActivityLogged::dispatch('rejected', "Peminjaman ditolak (id peminjaman:{$record->id})", $record);
+                        });
                     }),
 
                 Action::make('mark_on_going')

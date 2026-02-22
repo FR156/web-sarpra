@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Items\Tables;
 
+use App\Filament\Resources\Items\ItemResource;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Actions\EditAction;
@@ -27,6 +28,7 @@ class ItemsTable
             ])
             ->recordActions([
                 EditAction::make(),
-            ]);
+            ])
+            ->recordUrl(fn ($record) => ItemResource::getUrl('view', ['record' => $record]));
     }
 }
