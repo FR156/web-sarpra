@@ -38,6 +38,7 @@ class AdminPanelProvider extends PanelProvider
             ->navigationGroups([
                 'Manajemen Barang',
                 'Manajemen User',
+                'System',
             ])
             // ->login()
             ->authGuard('web')

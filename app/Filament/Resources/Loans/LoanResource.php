@@ -8,14 +8,14 @@ use App\Filament\Resources\Loans\Pages\ListLoans;
 use App\Filament\Resources\Loans\Pages\ViewLoan;
 use App\Filament\Resources\Loans\Schemas\LoanForm;
 use App\Filament\Resources\Loans\Tables\LoansTable;
+// use App\Filament\Resources\Loans\RelationManagers\LoanItemsRelationManager;
 use App\Models\Loan;
 use BackedEnum;
 use UnitEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use SebastianBergmann\CodeCoverage\Report\Xml\Unit;
+use Illuminate\Database\Eloquent\Builder;
 
 class LoanResource extends Resource
 {
@@ -38,7 +38,7 @@ class LoanResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            // LoanItemsRelationManager::class,
         ];
     }
 

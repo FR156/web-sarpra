@@ -11,6 +11,8 @@ use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\Select;
 
 class ItemUnitsRelationManager extends RelationManager
 {
@@ -67,7 +69,30 @@ class ItemUnitsRelationManager extends RelationManager
                 })
             ])
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()
+                    ->schema([
+                        TextInput::make('unit_code')
+                            ->label('Kode Unit')
+                            ->disabled(),
+
+                        Select::make('condition')
+                            ->options([
+                                'good' => 'Good',
+                                'minor_damage' => 'Minor Damage',
+                                'major_damage' => 'Major Damage',
+                            ])
+                            ->required(),
+
+                        Select::make('status')
+                            ->options([
+                                'available' => 'Available',
+                                'booked' => 'Booked',
+                                'on_loan' => 'On Loan',
+                                'maintenance' => 'Maintenance',
+                                'unavailable' => 'Unavailable',
+                            ])
+                            ->required(),
+                    ]),
                 DeleteAction::make(),
             ])
             ->toolbarActions([

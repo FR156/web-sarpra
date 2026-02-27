@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Loans\Tables;
 
 use App\Models\ItemUnit;
 use App\Events\ActivityLogged;
+use App\Filament\Resources\Loans\LoanResource;
 use Filament\Actions\Action;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
@@ -12,6 +13,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Radio;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\HtmlString;
 
@@ -325,6 +327,7 @@ class LoansTable
                     })
             ])
             ->defaultSort('created_at', 'desc')
+            ->recordUrl(fn ($record) => LoanResource::getUrl('view', ['record' => $record]))
             ->filters([
                 SelectFilter::make('status')
                     ->options([
