@@ -34,7 +34,7 @@ class MyLoans extends Component
             ->first();
 
         if ($loan) {
-            $loan->itemUnits()->update(['status' => 'available']);
+            // $loan->itemUnits()->update(['status' => 'available']);
             $loan->update(['status' => 'cancelled']);
             
             $record = $loan;

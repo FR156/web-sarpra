@@ -28,8 +28,19 @@
                                 <td class="py-3 text-gray-500 dark:text-gray-400 font-medium max-w-4">{{ $details['name'] }}</td>
                                 <td class="py-3 text-gray-500 dark:text-gray-400">{{ $details['category'] }}</td>
                                 <td class="py-3 text-center">
-                                    <span class="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 px-3 py-1 rounded-full font-bold">
-                                        {{ $details['qty'] ?? 1 }} </span>
+                                    <div class="flex items-center justify-center gap-2">
+                                        <button wire:click="decrementQty({{ $id }})" class="px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded">
+                                            -
+                                        </button>
+
+                                        <span class="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded font-bold">
+                                            {{ $details['qty'] ?? 1 }}
+                                        </span>
+
+                                        <button wire:click="incrementQty({{ $id }})" class="px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded">
+                                            +
+                                        </button>
+                                    </div>
                                 </td>
                                 <td class="py-3 text-right">
                                     <button wire:click="removeFromCart({{ $id }})" class="text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-600">
@@ -46,14 +57,26 @@
                         <div class="grid">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">Alasan Meminjam</label>
                             <input type="text" wire:model="reason" class="mt-1 block w-sm lg:w-lg bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-50 rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:ring-indigo-500 mb-4">
+                            
+                            @error('reason')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
                         <div class="grid">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">Rencana Tanggal Pinjam</label>
-                            <input type="date" wire:model="startDate" class="mt-1 block w-full bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-50 rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:ring-indigo-500 mb-4">
+                            <input type="datetime-local" min="{{ now()->format('Y-m-d\TH:i') }}" wire:model="startDate" class="mt-1 block w-full bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-50 rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:ring-indigo-500 mb-4">
+                            
+                            @error('startDate')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
                         <div class="grid">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">Rencana Tanggal Kembali</label>
-                            <input type="date" wire:model="dueDate" class="mt-1 block w-full bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-50 rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:ring-indigo-500 mb-4">
+                            <input type="datetime-local" min="{{ $startDate }}" wire:model="dueDate" class="mt-1 block w-full bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-50 rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:ring-indigo-500 mb-4">
+
+                            @error('dueDate')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
                     </div>
                     
