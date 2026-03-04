@@ -28,6 +28,10 @@ class LoanForm
                         ->searchable()
                         ->required(),
 
+                    TextInput::make('loan_code')
+                        ->label('Kode Peminjaman')
+                        ->disabled(),
+
                     TextInput::make('reason')
                         ->label('Alasan Peminjaman')
                         ->required(),

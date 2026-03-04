@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class Loan extends Model
 {
     protected $fillable = [
         'user_id',
+        'loan_code',
         'reason',
         'item_id',
         'start_date',
@@ -78,6 +80,23 @@ class Loan extends Model
 
     protected static function booted(): void
     {
+        static::creating(function ($loan) {
+            DB::transaction(function () use ($loan) {
+
+                $year = now()->year;
+
+                $lastSequence = self::where('year', $year)
+                    ->lockForUpdate()
+                    ->max('sequence_number') ?? 0;
+
+                $nextSequence = $lastSequence + 1;
+
+                $loan->year = $year;
+                $loan->sequence_number = $nextSequence;
+                $loan->loan_code = "LOAN-{$year}-" . ($nextSequence === 1 ? '1' : str_pad($nextSequence, 3, '0', STR_PAD_LEFT));
+            });
+        });
+
         static::deleting(function (Loan $loan) {
             // Eager load the relationships to avoid N+1 queries
             $loan->load('loanItems.loanItemUnits.itemUnit');

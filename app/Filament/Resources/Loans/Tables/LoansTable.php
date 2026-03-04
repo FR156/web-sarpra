@@ -28,14 +28,21 @@ class LoansTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
+                TextColumn::make('loan_code')
+                    ->label('Kode Peminjaman')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('user.name')
                     ->label('Peminjam')
                     ->tooltip(fn ($record) => $record->user ? $record->user->email : null)
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(),
 
                 TextColumn::make('reason')
                     ->label('Alasan Peminjaman')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(),
 
                 TextColumn::make('loanItems')
                     ->label('Daftar Barang')
@@ -47,7 +54,8 @@ class LoansTable
                     ->listWithLineBreaks()
                     ->bulleted()
                     ->limitList(2)
-                    ->expandableLimitedList(),
+                    ->expandableLimitedList()
+                    ->toggleable(),
 
                 TextColumn::make('loanItems.loanItemunits.itemUnit.unit_code')
                     ->label('Daftar Unit')
@@ -55,7 +63,8 @@ class LoansTable
                     ->bulleted()
                     ->limitList(2)
                     ->toggleable(isToggledHiddenByDefault: true) 
-                    ->expandableLimitedList(),
+                    ->expandableLimitedList()
+                    ->toggleable(),
 
                 TextColumn::make('status')
                     ->label('Status')
@@ -69,17 +78,20 @@ class LoansTable
                         'returned' => 'success',
                         'rejected' => 'danger',
                         'cancelled' => 'gray',
-                    }),
+                    })
+                    ->toggleable(),
 
                 TextColumn::make('start_date')
                     ->label('Waktu Mulai')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
 
                 TextColumn::make('due_date')
                     ->label('Waktu Selesai')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
 
                 TextColumn::make('returned_at')
                     ->label('Waktu Pengembalian')
