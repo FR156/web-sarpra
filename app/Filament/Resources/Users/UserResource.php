@@ -55,7 +55,7 @@ class UserResource extends Resource
 
     public static function getNavigationBadgeTooltip(): ?string
     {
-        return 'The number of users';
+        return 'Jumlah Pengguna';
     }
 
     public static function shouldRegisterNavigation(): bool

@@ -7,6 +7,7 @@ use App\Filament\Resources\Loans\Pages\EditLoan;
 use App\Filament\Resources\Loans\Pages\ListLoans;
 use App\Filament\Resources\Loans\Pages\ViewLoan;
 use App\Filament\Resources\Loans\Schemas\LoanForm;
+use App\Filament\Resources\Loans\Schemas\LoanInfolist;
 use App\Filament\Resources\Loans\Tables\LoansTable;
 // use App\Filament\Resources\Loans\RelationManagers\LoanItemsRelationManager;
 use App\Models\Loan;
@@ -28,6 +29,11 @@ class LoanResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return LoanForm::configure($schema);
+    }
+
+    public static function infolist(Schema $schema): Schema
+    {
+        return LoanInfolist::configure($schema);
     }
 
     public static function table(Table $table): Table
