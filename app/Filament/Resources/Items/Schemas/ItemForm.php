@@ -38,7 +38,8 @@ class ItemForm
                         FileUpload::make('image_path')
                             ->image()
                             ->label('Gambar Barang')
-                            ->required()
+                            ->disk('public')
+                            ->visibility('public')
                             ->imageEditor(),
                     ])->columns(2),
             ]);

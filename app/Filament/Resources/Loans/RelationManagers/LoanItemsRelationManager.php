@@ -39,7 +39,7 @@ class LoanItemsRelationManager extends RelationManager
                     ->badge()
                     ->sortable(),
 
-                TextColumn::make('loanItems.loanItemunits.itemUnit.unit_code')
+                TextColumn::make('loanItemunits.itemUnit.unit_code')
                     ->label('Daftar Unit')
                     ->listWithLineBreaks()
                     ->bulleted()

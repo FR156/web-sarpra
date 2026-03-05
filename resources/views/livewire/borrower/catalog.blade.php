@@ -34,6 +34,20 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             @forelse($items as $item)
                 <div class="bg-white dark:bg-card-dark overflow-hidden shadow-sm sm:rounded-lg border border-gray-100 dark:border-gray-700 flex flex-col">
+                    {{-- Image --}}
+                    <div class="w-full h-48 bg-gray-100 dark:bg-gray-700 overflow-hidden">
+                        @if($item->image_path)
+                            <img 
+                                src="{{ asset('storage/' . $item->image_path) }}" 
+                                alt="{{ $item->name }}"
+                                class="w-full h-full object-cover">
+                        @else
+                            <div class="flex items-center justify-center h-full text-gray-400 text-sm">
+                                No Image
+                            </div>
+                        @endif
+                    </div>
+
                     <div class="p-6 flex-1">
                         <div class="flex justify-between items-start mb-2">
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200">

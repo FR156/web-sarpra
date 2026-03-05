@@ -22,6 +22,17 @@ class ItemInfolist
                     ->columnSpanFull(),
                 ImageEntry::make('image_path')
                     ->label('Gambar')
+                    ->disk('public')
+                    // ->visibility('public')
+                    // ->getStateUsing(fn ($record) => asset('storage/' . $record->image_path))
+                    // ->getStateUsing(fn ($record) => $record->image_path)
+                    ->getStateUsing(function ($record) {
+                        if ($record->image_path) {
+                            return $record->image_path;
+                        }
+
+                        return $record->item?->image_path;
+                    })
                     ->placeholder('No Image')
                     ->columnSpanFull(),
                 TextEntry::make('created_at')
