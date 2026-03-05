@@ -7,6 +7,7 @@ use App\Filament\Resources\Items\Pages\EditItem;
 use App\Filament\Resources\Items\Pages\ListItems;
 use App\Filament\Resources\Items\Pages\ViewItem;
 use App\Filament\Resources\Items\Schemas\ItemForm;
+use App\Filament\Resources\Items\Schemas\ItemInfolist;
 use App\Filament\Resources\Items\Tables\ItemsTable;
 use App\Models\Item;
 use BackedEnum;
@@ -28,6 +29,11 @@ class ItemResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return ItemForm::configure($schema);
+    }
+
+    public static function infolist(Schema $schema): Schema
+    {
+        return ItemInfolist::configure($schema);
     }
 
     public static function table(Table $table): Table

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('items', function (Blueprint $table) {
             $table->string('prefix')->after('name');
+            $table->string('image_path')->nullable()->after('category_id');
             $table->softDeletes();
         });
     }

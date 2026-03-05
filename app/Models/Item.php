@@ -15,6 +15,7 @@ class Item extends Model
         'name', 
         'prefix',
         'category_id', 
+        'image_path',
         'description'
     ];
 

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Items\Schemas;
 
+use Filament\Forms\Components\FileUpload;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\TextInput;
@@ -33,6 +34,12 @@ class ItemForm
                             
                         Textarea::make('description')
                             ->columnSpanFull(),
+
+                        FileUpload::make('image_path')
+                            ->image()
+                            ->label('Gambar Barang')
+                            ->required()
+                            ->imageEditor(),
                     ])->columns(2),
             ]);
     }
