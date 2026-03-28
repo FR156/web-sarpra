@@ -93,7 +93,7 @@ class Loan extends Model
 
                 $loan->year = $year;
                 $loan->sequence_number = $nextSequence;
-                $loan->loan_code = "LOAN-{$year}-" . ($nextSequence === 1 ? '1' : str_pad($nextSequence, 3, '0', STR_PAD_LEFT));
+                $loan->loan_code = "LOAN-{$year}-" . ($nextSequence === 1 ? '1' : str_pad($nextSequence, 0, '0', STR_PAD_LEFT));
             });
         });
 

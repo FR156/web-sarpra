@@ -31,18 +31,18 @@ class LoansTable
                 TextColumn::make('loan_code')
                     ->label('Kode Peminjaman')
                     ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(),
 
                 TextColumn::make('user.name')
                     ->label('Peminjam')
                     ->tooltip(fn ($record) => $record->user ? $record->user->email : null)
                     ->searchable()
-                    ->toggleable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('reason')
                     ->label('Alasan Peminjaman')
                     ->searchable()
-                    ->toggleable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('loanItems')
                     ->label('Daftar Barang')
@@ -63,8 +63,7 @@ class LoansTable
                     ->bulleted()
                     ->limitList(2)
                     ->toggleable(isToggledHiddenByDefault: true) 
-                    ->expandableLimitedList()
-                    ->toggleable(),
+                    ->expandableLimitedList(),
 
                 TextColumn::make('status')
                     ->label('Status')
@@ -81,17 +80,26 @@ class LoansTable
                     })
                     ->toggleable(),
 
+                TextColumn::make('duration')
+                    ->label('Durasi Peminjaman')
+                    ->state(function ($record) {
+                        $duration = $record->due_date->diff($record->start_date);
+                        return ($duration->days + 1) . ' hari ' . $duration->hours . ' jam' . ' ' . $duration->minutes . ' menit';
+                    })
+                    ->sortable()
+                    ->toggleable(),
+
                 TextColumn::make('start_date')
                     ->label('Waktu Mulai')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('due_date')
                     ->label('Waktu Selesai')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('returned_at')
                     ->label('Waktu Pengembalian')
