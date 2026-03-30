@@ -5,6 +5,7 @@ use App\Livewire\Borrower\Catalog;
 use App\Livewire\Borrower\Cart;
 use App\Livewire\Borrower\MyLoans;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ReportController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -25,6 +26,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/catalog', Catalog::class)->name('catalog');
     Route::get('/cart', Cart::class)->name('cart');
     Route::get('/my-loans', MyLoans::class)->name('my-loans');
+
+    Route::post('/export-report', [ReportController::class, 'export'])->name('export.report');
 });
 
 require __DIR__.'/auth.php';

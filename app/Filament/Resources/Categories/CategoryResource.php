@@ -10,7 +10,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use App\Filament\Resources\Categories\Schemas\CategoryForm;
-use App\Filament\Resources\Categories\Tables\CategoryTable;
+use App\Filament\Resources\Categories\Tables\CategoriesTable;
 use BackedEnum;
 use UnitEnum;
 
@@ -30,7 +30,7 @@ class CategoryResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return CategoryTable::configure($table);
+        return CategoriesTable::configure($table);
     }
 
     public static function getPages(): array

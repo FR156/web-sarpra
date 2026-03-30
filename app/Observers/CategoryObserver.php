@@ -9,8 +9,7 @@ class CategoryObserver
 {
     public function created(Category $category)
     {
-        $time = now()->format('H:i:s.u');
-        ActivityLogged::dispatch('created', "[{$time}] Menambah kategori baru: {$category->name}", $category);
+        ActivityLogged::dispatch('created', "Menambah kategori baru: {$category->name}", $category);
     }
 
     public function updated(Category $category)
@@ -22,7 +21,6 @@ class CategoryObserver
 
     public function deleted(Category $category)
     {
-        $time = now()->format('H:i:s.u');
-        ActivityLogged::dispatch('deleted', "[{$time}] Menghapus kategori: {$category->name}", $category);
+        ActivityLogged::dispatch('deleted', "Menghapus kategori: {$category->name}", $category);
     }
 }
