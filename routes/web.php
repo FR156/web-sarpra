@@ -27,7 +27,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/cart', Cart::class)->name('cart');
     Route::get('/my-loans', MyLoans::class)->name('my-loans');
 
-    Route::post('/export-report', [ReportController::class, 'export'])->name('export.report');
+    Route::prefix('report')->group(function () {
+        Route::post('/summary', [ReportController::class, 'exportSummary'])->name('report.summary');
+        Route::post('/filtered', [ReportController::class, 'exportFiltered'])->name('report.filtered');
+        Route::post('/all', [ReportController::class, 'exportAll'])->name('report.all');
+    });
 });
 
 require __DIR__.'/auth.php';
