@@ -6,6 +6,7 @@ use App\Livewire\Borrower\Cart;
 use App\Livewire\Borrower\MyLoans;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\LogExportController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,6 +33,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/filtered', [ReportController::class, 'exportFiltered'])->name('report.filtered');
         Route::post('/all', [ReportController::class, 'exportAll'])->name('report.all');
     });
+
+    Route::get('/log', [LogExportController::class, 'exportLog'])->name('log');
 });
 
 require __DIR__.'/auth.php';

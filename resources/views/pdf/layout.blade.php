@@ -14,6 +14,7 @@
         .kop-text p { margin: 2px 0; font-size: 11px; }
 
         /* Typography & Tables */
+        h1 { font-size: 20px; margin-bottom: 4px; }
         h2 { font-size: 15px; margin-top: 20px; border-bottom: 1px solid #e5e7eb; padding-bottom: 4px; }
         .text-muted { color: #6b7280; font-size: 10px; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
@@ -25,6 +26,9 @@
         .value { font-size: 16px; font-weight: bold; margin-top: 4px; }
         .status-approved { color: #16a34a; }
         .status-rejected { color: #dc2626; }
+        .status-cancelled { color: #d97706; font-weight: bold; }
+        .grid { width: 100%; margin-top: 10px; }
+        .grid td { width: 50%; padding: 10px; }
         
         @page { margin: 1cm; }
     </style>
@@ -37,10 +41,9 @@
                 <img src="{{ public_path('images/logo-sekolah.png') }}" width="80">
             </td>
             <td class="kop-text" style="border: none;">
-                <h1>PEMERINTAH PROVINSI ANU</h1>
-                <h1>SMK NEGERI CONTOH</h1>
-                <p>Jl. Teknik Komputer No. 404, Kota Digital</p>
-                <p>Email: admin@smkcontoh.sch.id | Telp: (021) 123456</p>
+                <h1>SMK Telkom 1 Medan</h1>
+                <p>Jl. Jamin Ginting Km. 11 No. 9C, Kec. Medan Tuntungan, Kota Medan, Sumatera Utara</p>
+                <p>Email: smktelkommedan01@gmail.com | Telp: 08116500153</p>
             </td>
         </tr>
     </table>
@@ -50,11 +53,5 @@
     </div>
 
     @yield('content')
-
-    <div style="margin-top: 30px; float: right; width: 200px; text-align: center;">
-        <p>Mengetahui,</p>
-        <p style="margin-top: 60px;"><strong>Kepala Sarana Prasarana</strong></p>
-        <p>NIP. 19820301XXXXXXXX</p>
-    </div>
 </body>
 </html>

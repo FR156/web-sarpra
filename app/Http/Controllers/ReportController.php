@@ -8,22 +8,6 @@ use App\Models\Loan;
 use App\Models\Item;
 use App\Models\ItemUnit;
 
-// class ReportController extends Controller
-// {
-//     public function export()
-//     {
-//         $data = [
-//             'loans' => Loan::all(),
-//             'items' => Item::all(),
-//             'itemUnits' => ItemUnit::all(),
-//         ];
-
-//         $pdf = Pdf::loadView('pdf.report', $data);
-
-//         return $pdf->download('report.pdf');
-//     }
-// }
-
 class ReportController extends Controller
 {
     // Summary (default / quick report)

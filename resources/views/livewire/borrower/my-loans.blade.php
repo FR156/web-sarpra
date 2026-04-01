@@ -20,6 +20,7 @@
                                 <th class="px-4 py-3 text-sm font-semibold text-gray-600 dark:text-gray-400">Tgl Pinjam</th>
                                 <th class="px-4 py-3 text-sm font-semibold text-gray-600 dark:text-gray-400">Tgl Kembali</th>
                                 <th class="px-4 py-3 text-sm font-semibold text-gray-600 dark:text-gray-400 text-center">Status</th>
+                                <th class="px-4 py-3 text-sm font-semibold text-gray-600 dark:text-gray-400 text-center">Status Denda</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -61,6 +62,30 @@
                                                 </button>
                                             @endif
                                         </div>
+                                    </td>
+                                    <td class="px-4 py-4 text-sm text-center">
+                                        @php
+                                            $dendaColor = match($loan->fine_status) {
+                                                'paid' => 'bg-green-100 text-green-800',
+                                                'unpaid' => 'bg-red-100 text-red-800',
+                                                default => 'bg-gray-100 text-gray-800',
+                                            };
+                                        @endphp
+                                        @if($loan->fine_status === 'paid')
+                                            <span class="px-3 py-1 rounded-full text-xs font-medium {{ $dendaColor }}">
+                                                Lunas
+                                            </span><br>
+                                            <span class="px-3 py-1 rounded-full text-xs font-medium {{ $dendaColor }}">Rp.{{ $loan->fine_amount }}</span>
+                                        @elseif ($loan->fine_status === 'unpaid')
+                                            <span class="px-3 py-1 rounded-full text-xs font-medium {{ $dendaColor }}">
+                                                Belum Lunas
+                                            </span><br>
+                                            <span class="px-3 py-1 rounded-full text-xs font-medium {{ $dendaColor }}">Rp.{{ $loan->fine_amount }}</span>
+                                        @else
+                                            <span class="px-3 py-1 rounded-full text-xs font-medium {{ $dendaColor }}">
+                                                Tidak Ada
+                                            </span>
+                                        @endif
                                     </td>
                                 </tr>
                             @empty

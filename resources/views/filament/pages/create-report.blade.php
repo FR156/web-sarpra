@@ -19,7 +19,7 @@
             <input type="number" name="limit" placeholder="Max records (e.g. 10)">
     
             <x-filament::button type="submit">
-                Export
+                Ekspor
             </x-filament::button>
         </form>
     </x-filament::section>
@@ -27,7 +27,21 @@
     <form method="POST" action="{{ route('report.summary') }}">
         @csrf
         <x-filament::button type="submit">
-            Export Summary
+            Ekspor Laporan Ringkas
+        </x-filament::button>
+    </form>
+
+    <form method="POST" action="{{ route('report.all') }}">
+        @csrf
+        <x-filament::button type="submit">
+            Ekspor Semua Data Peminjaman
+        </x-filament::button>
+    </form>
+
+    <form method="GET" action="{{ route('log') }}">
+        @csrf
+        <x-filament::button type="submit">
+            Ekspor Data Log
         </x-filament::button>
     </form>
 </x-filament-panels::page>

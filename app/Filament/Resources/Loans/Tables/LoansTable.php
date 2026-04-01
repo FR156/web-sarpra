@@ -310,10 +310,12 @@ class LoansTable
                             ])
                     ])
                     ->visible(fn ($record) => $record->status === 'on_going')
-                    ->action(function ($record) {
+                    ->action(function (array $data, $record) {
                         $record->update([
                             'status' => 'returned',
                             'returned_at' => now(),
+                            'fine_amount' => $data['fine_amount'],
+                            'fine_reason' => $data['fine_reason'],
                         ]);
                         foreach ($record->loanItems as $loanItem) {
                             foreach ($loanItem->loanItemUnits as $assigned) {
@@ -339,9 +341,9 @@ class LoansTable
                                 'unpaid' => 'Belum Lunas',
                             ])
                     ])
-                    ->action(function ($record) {
+                    ->action(function (array $data, $record) {
                         $record->update([
-                            'fine_status' => $record->fine_status,
+                            'fine_status' => $data['fine_status'],
                         ]);
                         ActivityLogged::dispatch('fine_status', "Status denda peminjaman telah diubah (id peminjaman:{$record->id})", $record);
                     })

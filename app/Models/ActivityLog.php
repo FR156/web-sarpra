@@ -27,4 +27,9 @@ class ActivityLog extends Model
             'ip_address' => Request::ip(),
         ]);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

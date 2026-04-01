@@ -94,19 +94,19 @@
     </p>
 
     <!-- LOAN SUMMARY -->
-    <h2>Loan Summary</h2>
+    <h2>Laporan Peminjaman</h2>
 
     <table class="grid">
         <tr>
             <td>
                 <div class="card">
-                    Total Loans
+                    Total Peminjaman
                     <div class="value">{{ $loans->count() }}</div>
                 </div>
             </td>
             <td>
                 <div class="card">
-                    Approved
+                    Disetujui
                     <div class="value">{{ $loans->where('status','approved')->count() }}</div>
                 </div>
             </td>
@@ -114,13 +114,13 @@
         <tr>
             <td>
                 <div class="card">
-                    Rejected
+                    Ditolak
                     <div class="value">{{ $loans->where('status','rejected')->count() }}</div>
                 </div>
             </td>
             <td>
                 <div class="card">
-                    Cancelled
+                    Dibatalkan
                     <div class="value">{{ $loans->where('status','cancelled')->count() }}</div>
                 </div>
             </td>
@@ -128,26 +128,26 @@
     </table>
 
     <!-- ITEM SUMMARY -->
-    <h2>Item Summary</h2>
+    <h2>Laporan Inventaris</h2>
 
     <table class="grid">
         <tr>
             <td>
                 <div class="card">
-                    Total Items
+                    Total Barang
                     <div class="value">{{ $items->count() }}</div>
                 </div>
             </td>
             <td>
                 <div class="card">
-                    Total Units
+                    Total Unit
                     <div class="value">{{ $itemUnits->count() }}</div>
                 </div>
             </td>
             <td>
                 <div class="card">
-                    Damaged Units
-                    <div class="value">{{ $itemUnits->where('condition','damaged')->count() }}</div>
+                    Unit Bagus
+                    <div class="value">{{ $itemUnits->where('condition','good')->count() }}</div>
                 </div>
             </td>
         </tr>
@@ -174,15 +174,15 @@
     </table>
 
     <!-- DETAIL TABLE -->
-    <h2>Recent Loans</h2>
+    <h2>Peminjaman Terbaru</h2>
 
     <table>
         <thead>
             <tr>
-                <th>Loan Code</th>
-                <th>User</th>
+                <th>Kode Peminjaman</th>
+                <th>Peminjam</th>
                 <th>Status</th>
-                <th>Date</th>
+                <th>Tanggal</th>
             </tr>
         </thead>
         <tbody>

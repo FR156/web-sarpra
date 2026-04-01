@@ -16,6 +16,9 @@ class Loan extends Model
         'start_date',
         'due_date',
         'returned_at',
+        'fine_amount',
+        'fine_reason',
+        'fine_status',
         'status',
         'approver_id',
     ];

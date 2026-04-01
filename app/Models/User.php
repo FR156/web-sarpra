@@ -50,6 +50,11 @@ class User extends Authenticatable implements FilamentUser
         ];
     }
 
+    public function log()
+    {
+        return $this->hasMany(ActivityLog::class);
+    }
+
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
