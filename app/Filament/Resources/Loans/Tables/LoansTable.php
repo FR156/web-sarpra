@@ -258,8 +258,11 @@ class LoansTable
                                 'approver_id' => auth()->id(),
                             ]);
                         });
-
                         ActivityLogged::dispatch('approved', "Peminjaman diterima (id peminjaman:{$record->id})", $record);
+                        Notification::make()
+                            ->title('Peminjaman diterima')
+                            ->success()
+                            ->send();
                     }),
                 
                 Action::make('reject')
@@ -273,9 +276,12 @@ class LoansTable
                             $record->update([
                                 'status' => 'rejected',
                                 'approver_id' => auth()->id(),
-                            ]);
-                            
+                            ]);        
                             ActivityLogged::dispatch('rejected', "Peminjaman ditolak (id peminjaman:{$record->id})", $record);
+                            Notification::make()
+                                ->title('Peminjaman ditolak')
+                                ->danger()
+                                ->send();
                         });
                     }),
 
@@ -290,6 +296,10 @@ class LoansTable
                             'status' => 'on_going',
                         ]);
                         ActivityLogged::dispatch('on_going', "Peminjaman dimulai (id peminjaman:{$record->id})", $record);
+                        Notification::make()
+                            ->title('Peminjaman dimulai')
+                            ->success()
+                            ->send();
                     }),
 
                 Action::make('mark_returned')
@@ -325,8 +335,11 @@ class LoansTable
                                 ]);
                             }
                         }
-
                         ActivityLogged::dispatch('returned', "Barang peminjaman telah dikembalikan (id peminjaman:{$record->id})", $record);
+                        Notification::make()
+                            ->success()
+                            ->title('Barang Peminjaman Berhasil Dikembalikan')
+                            ->send();
                     }),
 
                 Action::make('fine_status')
@@ -346,6 +359,10 @@ class LoansTable
                             'fine_status' => $data['fine_status'],
                         ]);
                         ActivityLogged::dispatch('fine_status', "Status denda peminjaman telah diubah (id peminjaman:{$record->id})", $record);
+                        Notification::make()
+                            ->success()
+                            ->title('Status Denda Berhasil Diubah')
+                            ->send();
                     })
             ])
             ->defaultSort('created_at', 'desc')

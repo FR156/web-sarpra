@@ -14,6 +14,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
+use Filament\Notifications\Notification;
 use Filament\Tables\Table;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Tables\Columns\TextColumn;
@@ -177,8 +178,11 @@ class ViewLoan extends ViewRecord
                                 'approver_id' => auth()->id(),
                             ]);
                         });
-
                         ActivityLogged::dispatch('approved', "Peminjaman diterima (id peminjaman:{$record->id})", $record);
+                        Notification::make()
+                            ->title('Peminjaman diterima')
+                            ->success()
+                            ->send();
                     }),
                 
                 Action::make('reject')
@@ -193,8 +197,11 @@ class ViewLoan extends ViewRecord
                                 'status' => 'rejected',
                                 'approver_id' => auth()->id(),
                             ]);
-                            
                             ActivityLogged::dispatch('rejected', "Peminjaman ditolak (id peminjaman:{$record->id})", $record);
+                            Notification::make()
+                                ->title('Peminjaman ditolak')
+                                ->danger()
+                                ->send();
                         });
                     }),
 
@@ -209,6 +216,10 @@ class ViewLoan extends ViewRecord
                             'status' => 'on_going',
                         ]);
                         ActivityLogged::dispatch('on_going', "Peminjaman dimulai (id peminjaman:{$record->id})", $record);
+                        Notification::make()
+                            ->title('Peminjaman dimulai')
+                            ->success()
+                            ->send();
                     }),
 
                 Action::make('mark_returned')
@@ -230,22 +241,27 @@ class ViewLoan extends ViewRecord
                     ])
                     ->visible(fn ($record) => $record->status === 'on_going')
                     ->action(function (array $data, $record) {
-                        $record->update([
-                            'status' => 'returned',
-                            'returned_at' => now(),
-                            'fine_amount' => $data['fine_amount'],
-                            'fine_reason' => $data['fine_reason'],
-                        ]);
-                        foreach ($record->loanItems as $loanItem) {
-                            foreach ($loanItem->loanItemUnits as $assigned) {
-                                $assigned->itemUnit->update([
-                                    'status' => 'available',
-                                    'last_used_at' => now(),
-                                ]);
+                        DB::transaction(function () use ($record, $data) {
+                            $record->update([
+                                'status' => 'returned',
+                                'returned_at' => now(),
+                                'fine_amount' => $data['fine_amount'],
+                                'fine_reason' => $data['fine_reason'],
+                            ]);
+                            foreach ($record->loanItems as $loanItem) {
+                                foreach ($loanItem->loanItemUnits as $assigned) {
+                                    $assigned->itemUnit->update([
+                                        'status' => 'available',
+                                        'last_used_at' => now(),
+                                    ]);
+                                }
                             }
-                        }
-
-                        ActivityLogged::dispatch('returned', "Barang peminjaman telah dikembalikan (id peminjaman:{$record->id})", $record);
+                            ActivityLogged::dispatch('returned', "Barang peminjaman telah dikembalikan (id peminjaman:{$record->id})", $record);
+                            Notification::make()
+                                ->success()
+                                ->title('Barang Peminjaman Berhasil Dikembalikan')
+                                ->send();
+                        });
                     }),
 
                 Action::make('fine_status')
@@ -265,6 +281,10 @@ class ViewLoan extends ViewRecord
                             'fine_status' => $data['fine_status'],
                         ]);
                         ActivityLogged::dispatch('fine_status', "Status denda peminjaman telah diubah (id peminjaman:{$record->id})", $record);
+                        Notification::make()
+                            ->success()
+                            ->title('Status Denda Berhasil Diubah')
+                            ->send();
                     }),
             EditAction::make(),
         ];

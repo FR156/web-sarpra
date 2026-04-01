@@ -99,7 +99,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($loans->take(10) as $loan)
+            @foreach ($loans->take(10) as $index => $loan)
                 <tr>
                     <td style="text-align: center;">{{ $index + 1 }}</td>
                     <td>{{ $loan->loan_code }}</td>

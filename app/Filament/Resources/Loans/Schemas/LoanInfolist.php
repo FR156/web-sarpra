@@ -47,6 +47,14 @@ class LoanInfolist
                     ->label('Tanggal Pengembalian')
                     ->placeholder('-'),
 
+                TextEntry::make('fine_amount')
+                    ->label('Denda')
+                    ->placeholder('-'),
+
+                TextEntry::make('fine_status')
+                    ->label('Status Denda')
+                    ->placeholder('-'),
+
                 TextEntry::make('loanItems')
                     ->label('Daftar Barang')
                     ->state(function ($record) {
