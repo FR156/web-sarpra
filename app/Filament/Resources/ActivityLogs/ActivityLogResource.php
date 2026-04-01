@@ -5,6 +5,7 @@ namespace App\Filament\Resources\ActivityLogs;
 use App\Filament\Resources\ActivityLogs\Pages\ListActivityLogs;
 use App\Filament\Resources\ActivityLogs\Schemas\ActivityLogForm;
 use App\Filament\Resources\ActivityLogs\Schemas\ActivityLogInfolist;
+use App\Filament\Resources\ActivityLogs\Tables\ActivityLogsTable;
 use App\Models\ActivityLog;
 use BackedEnum;
 use UnitEnum;
@@ -35,70 +36,7 @@ class ActivityLogResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table
-            ->columns([
-                TextColumn::make('created_at')
-                    ->label('Waktu')
-                    ->dateTime('d M Y, H:i')
-                    ->sortable(),
-                    
-                TextColumn::make('action')
-                    ->label('Aksi')
-                    ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'created' => 'success',
-                        'request' => 'warning',
-                        'approved' => 'info',
-                        'rejected', 'cancelled' => 'danger',
-                        'returned' => 'gray',
-                        'added' => 'success',
-                        'updated' => 'warning',
-                        'deleted' => 'danger',
-                        'login' => 'success',
-                        'logout' => 'warning',
-                        'login_failed' => 'danger',
-                        default => 'indigo',
-                    }),
-
-                TextColumn::make('description')
-                    ->label('Detail Aktivitas')
-                    ->searchable()
-                    ->visibleFrom('md'),
-
-                TextColumn::make('ip_address')
-                    ->label('IP Address')
-                    ->toggleable(isToggledHiddenByDefault: true),
-            ])
-            ->filters([
-                SelectFilter::make('action')
-                    ->options([
-                        'created' => 'Created',
-                        'request' => 'Requested',
-                        'approved' => 'Approved',
-                        'rejected' => 'Rejected',
-                        'returned' => 'Returned',
-                        'cancelled' => 'Cancelled',
-                        'added' => 'Added',
-                        'updated' => 'Updated',
-                        'deleted' => 'Deleted',
-                        'login' => 'Login',
-                        'logout' => 'Logout',
-                        'login_failed' => 'Login Failed',
-                    ]),
-            ])
-            ->defaultSort('created_at', 'desc')
-            ->recordActions([
-                ViewAction::make()
-                    ->label('Detail')
-                    ->modalHeading('Detail Aktivitas')
-                    ->modalWidth('lg')
-                    ->schema([
-                        TextEntry::make('description')
-                            ->label('Deskripsi Lengkap')
-                            ->prose()
-                            ->columnSpanFull(),
-                    ]),
-            ]);
+        return ActivityLogsTable::configure($table);
     }
 
     public static function getRelations(): array

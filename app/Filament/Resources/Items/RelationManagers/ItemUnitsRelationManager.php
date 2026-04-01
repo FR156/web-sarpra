@@ -48,8 +48,9 @@ class ItemUnitsRelationManager extends RelationManager
                     }),
             ])
             ->headerActions([
+                // Tambah Unit Bulk
                 Action::make('createBulkUnits')
-                    ->label('Add Unit')
+                    ->label('Tambah Unit')
                     ->icon('heroicon-o-plus')
                     ->schema([
                         TextInput::make('qty')

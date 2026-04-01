@@ -28,12 +28,14 @@ class ViewLoan extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
+            // Setujui permintaan peminjaman
             Action::make('approve')
                     ->label('Setujui')
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
                     ->visible(fn ($record) => $record->status === 'pending')
                     ->schema([
+                        // Mode Assign
                         Radio::make('assign_mode')
                             ->label('Mode Assign Unit')
                             ->options([
@@ -44,6 +46,7 @@ class ViewLoan extends ViewRecord
                             ->required()
                             ->reactive(),
 
+                        // Unit Requirements
                         TextEntry::make('unit_requirements')
                             ->label('Kebutuhan Unit')
                             ->state(function ($record) {
@@ -59,6 +62,7 @@ class ViewLoan extends ViewRecord
                             })
                             ->visible(fn ($get) => $get('assign_mode') === 'manual'),
                             
+                        // Selected Units
                         Select::make('selected_units_grouped')
                             ->label('Pilih Unit')
                             ->multiple()
@@ -185,6 +189,7 @@ class ViewLoan extends ViewRecord
                             ->send();
                     }),
                 
+                // Tolak peminjaman
                 Action::make('reject')
                     ->label('Tolak')
                     ->icon('heroicon-o-x-circle')
@@ -205,6 +210,7 @@ class ViewLoan extends ViewRecord
                         });
                     }),
 
+                // Mulai peminjaman
                 Action::make('mark_on_going')
                     ->label('Mulai Peminjaman')
                     ->icon('heroicon-o-arrow-path-rounded-square')
@@ -222,6 +228,7 @@ class ViewLoan extends ViewRecord
                             ->send();
                     }),
 
+                // Kembalikan barang
                 Action::make('mark_returned')
                     ->label('Kembalikan Barang')
                     ->icon('heroicon-o-arrow-path-rounded-square')
@@ -241,29 +248,21 @@ class ViewLoan extends ViewRecord
                     ])
                     ->visible(fn ($record) => $record->status === 'on_going')
                     ->action(function (array $data, $record) {
-                        DB::transaction(function () use ($record, $data) {
-                            $record->update([
-                                'status' => 'returned',
-                                'returned_at' => now(),
-                                'fine_amount' => $data['fine_amount'],
-                                'fine_reason' => $data['fine_reason'],
-                            ]);
-                            foreach ($record->loanItems as $loanItem) {
-                                foreach ($loanItem->loanItemUnits as $assigned) {
-                                    $assigned->itemUnit->update([
-                                        'status' => 'available',
-                                        'last_used_at' => now(),
-                                    ]);
-                                }
-                            }
-                            ActivityLogged::dispatch('returned', "Barang peminjaman telah dikembalikan (id peminjaman:{$record->id})", $record);
-                            Notification::make()
-                                ->success()
-                                ->title('Barang Peminjaman Berhasil Dikembalikan')
-                                ->send();
-                        });
+                        // Cukup update tabel utamanya saja
+                        // Trigger di DB akan otomatis mengurus sisanya!
+                        $record->update([
+                            'status' => 'returned',
+                            'returned_at' => now(),
+                            'fine_amount' => $data['fine_amount'],
+                            'fine_reason' => $data['fine_reason'],
+                        ]);
+
+                        ActivityLogged::dispatch('returned', "Barang dikembalikan (ID:{$record->id})", $record);
+                        
+                        Notification::make()->success()->title('Berhasil dikembalikan')->send();
                     }),
 
+                // Ubah status denda
                 Action::make('fine_status')
                     ->label('Status Denda')
                     ->color('warning')

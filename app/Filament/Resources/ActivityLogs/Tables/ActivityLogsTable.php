@@ -11,6 +11,9 @@ use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Table;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Infolists\Components\TextEntry;
 
 class ActivityLogsTable
 {
@@ -18,41 +21,70 @@ class ActivityLogsTable
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('created_at')
+                    ->label('Waktu')
+                    ->dateTime('d M Y, H:i')
+                    ->sortable(),
+                    
+                TextColumn::make('action')
+                    ->label('Aksi')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'created' => 'success',
+                        'request' => 'warning',
+                        'approved' => 'info',
+                        'rejected', 'cancelled' => 'danger',
+                        'returned' => 'gray',
+                        'added' => 'success',
+                        'updated' => 'warning',
+                        'deleted' => 'danger',
+                        'login' => 'success',
+                        'logout' => 'warning',
+                        'login_failed' => 'danger',
+                        default => 'indigo',
+                    }),
+
+                TextColumn::make('description')
+                    ->label('Detail Aktivitas')
+                    ->searchable()
+                    ->visibleFrom('md'),
+
+                TextColumn::make('ip_address')
+                    ->label('IP Address')
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('action')
+                    ->options([
+                        'created' => 'Created',
+                        'request' => 'Requested',
+                        'approved' => 'Approved',
+                        'rejected' => 'Rejected',
+                        'returned' => 'Returned',
+                        'cancelled' => 'Cancelled',
+                        'added' => 'Added',
+                        'updated' => 'Updated',
+                        'deleted' => 'Deleted',
+                        'login' => 'Login',
+                        'logout' => 'Logout',
+                        'login_failed' => 'Login Failed',
+                    ]),
             ])
+            ->defaultSort('created_at', 'desc')
             ->recordActions([
-                //
+                ViewAction::make()
+                    ->label('Detail')
+                    ->modalHeading('Detail Aktivitas')
+                    ->modalWidth('lg')
+                    ->schema([
+                        TextEntry::make('description')
+                            ->label('Deskripsi Lengkap')
+                            ->prose()
+                            ->columnSpanFull(),
+                    ]),
             ])
             ->headerActions([
-                Action::make('exportReport')
-                    ->label('Download Laporan Struktur')
-                    ->icon('heroicon-o-document-arrow-down')
-                    ->form([
-                        DatePicker::make('start_date')->required(),
-                        DatePicker::make('end_date')->required(),
-                    ])
-                    ->action(function (array $data) {
-                        $logs = ActivityLog::whereBetween('created_at', [$data['start_date'], $data['end_date']])->get();
-                        
-                        // Logic hitung statistik disini
-                        $pdf = PDF::loadView('reports.activity-log', [
-                            'logs' => $logs,
-                            'startDate' => $data['start_date'],
-                            'endDate' => $data['end_date'],
-                            'approvedCount' => $logs->where('description', 'approved')->count(),
-                            // ... statistik lainnya
-                        ]);
-
-                        return response()->streamDownload(fn () => print($pdf->output()), 'laporan-sarpra.pdf');
-                    })
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+                //
             ]);
     }
 }
